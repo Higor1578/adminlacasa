@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Admin La Casa da Pizza</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#100704;
+  --panel:#1c0d08;
+  --panel2:#27120b;
+  --line:#3b1b10;
+  --text:#fff4e8;
+  --muted:#c99f7c;
+  --brand:#ff6b35;
+  --brand2:#ffb45c;
+  --green:#2ecc71;
+  --blue:#3498db;
+  --red:#e74c3c;
+  --yellow:#f39c12;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#100704,#210b05);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.login-box{
+  width:100%;
+  max-width:390px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+}
+.login-box h1{margin:0 0 8px;color:var(--brand2);font-size:28px}
+.login-box p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.4}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--brand2);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.input, .select, textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:#120804;
+  color:var(--text);
+  border-radius:14px;
+  padding:12px;
+  outline:none;
+}
+.input:focus,.select:focus,textarea:focus{border-color:var(--brand)}
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:11px 14px;
+  background:var(--brand);
+  color:#160801;
+  font-weight:800;
+}
+.btn.secondary{background:#35190f;color:var(--text);border:1px solid var(--line)}
+.btn.green{background:var(--green);color:#071b0d}
+.btn.blue{background:var(--blue);color:#061019}
+.btn.red{background:var(--red);color:#fff}
+.btn.small{padding:7px 10px;border-radius:10px;font-size:12px}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+}
+.sidebar{
+  background:rgba(18,8,4,.94);
+  border-right:1px solid var(--line);
+  padding:18px;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.logo-icon{
+  width:45px;height:45px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  font-size:24px;
+}
+.logo h2{margin:0;color:var(--brand2);font-size:18px}
+.logo span{font-size:12px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:8px}
+.nav button{
+  text-align:left;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid transparent;
+  border-radius:14px;
+  padding:12px;
+  font-weight:700;
+}
+.nav button.active{
+  background:var(--panel2);
+  color:var(--text);
+  border-color:var(--line);
+}
+.nav-footer{
+  position:absolute;
+  left:18px;right:18px;bottom:18px;
+}
+.main{
+  padding:22px;
+  max-width:1200px;
+  width:100%;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:20px;
+}
+.topbar h1{margin:0;color:var(--brand2);font-size:26px}
+.topbar p{margin:5px 0 0;color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.card{
+  background:rgba(28,13,8,.92);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.stat-value{font-size:26px;color:var(--brand2);font-weight:900}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.section-title h2{margin:0;color:var(--brand2);font-size:20px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:11px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+th{color:var(--brand2);font-size:12px;text-transform:uppercase;letter-spacing:.7px}
+td{color:#ffe8d5}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:800;
+  background:#32170e;
+  border:1px solid var(--line);
+}
+.badge.novo{color:var(--yellow)}
+.badge.preparando{color:var(--blue)}
+.badge.entregue{color:var(--green)}
+.badge.cancelado{color:var(--red)}
+.order-card{
+  display:grid;
+  grid-template-columns:1.2fr 1fr auto;
+  gap:14px;
+  padding:14px;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  margin-bottom:10px;
+}
+.order-card strong{color:var(--brand2)}
+.order-meta{font-size:13px;color:var(--muted);line-height:1.5}
+.items{font-size:13px;line-height:1.5;color:#ffe8d5}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.notice{
+  background:#2c140c;
+  border:1px solid var(--line);
+  color:#ffd7b5;
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:14px;
+  font-size:14px;
+}
+.tabs-mobile{display:none}
+@media(max-width:850px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:14px}
+  .tabs-mobile{
+    display:flex;
+    position:sticky;
+    top:0;
+    z-index:5;
+    gap:8px;
+    overflow-x:auto;
+    background:#100704;
+    padding:10px 0;
+    margin-bottom:12px;
+  }
+  .tabs-mobile button{
+    white-space:nowrap;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+    border-radius:999px;
+    padding:9px 12px;
+    font-weight:800;
+  }
+  .tabs-mobile button.active{background:var(--brand);color:#160801}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .order-card{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<section id="loginScreen" class="login">
+  <form class="login-box" onsubmit="login(event)">
+    <h1>🍕 La Casa Admin</h1>
+    <p>Painel novo para acompanhar pedidos, dashboard, produtos, bairros, bebidas e funcionamento.</p>
+    <div class="field">
+      <label>Email</label>
+      <input class="input" id="email" type="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input class="input" id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn" id="loginBtn" type="submit" style="width:100%">Entrar</button>
+    <div id="loginMsg" class="notice hidden" style="margin-top:14px"></div>
+  </form>
+</section>
+
+<section id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">🍕</div>
+      <div><h2>La Casa</h2><span>Painel administrativo</span></div>
+    </div>
+    <nav class="nav" id="sideNav"></nav>
+    <div class="nav-footer">
+      <button class="btn secondary" onclick="logout()" style="width:100%">Sair</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="tabs-mobile" id="mobileNav"></div>
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Resumo geral da pizzaria.</p>
+      </div>
+      <div class="row">
+        <button class="btn secondary" onclick="loadAll()">Atualizar</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</section>
+
+<script>
+const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
+const SUPABASE_KEY='sb_publishable_DqoB81h8n1YjjT6rZpEo1Q_dadcornK';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let current='dashboard';
+let session=null;
+let orders=[];
+let products=[];
+let bairros=[];
+let settings={manual_closed:false,closed_days:[]};
+
+const pages=[
+  ['dashboard','📊 Dashboard','Resumo geral'],
+  ['pedidos','📦 Pedidos','Pedidos recebidos pelo site'],
+  ['produtos','🍕 Produtos','Preços e produtos'],
+  ['bebidas','🥤 Bebidas','Cadastro de bebidas'],
+  ['bairros','🛵 Bairros','Taxas de entrega'],
+  ['funcionamento','🕒 Funcionamento','Abrir, fechar e dias de folga']
+];
+
+const $=id=>document.getElementById(id);
+const money=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function setMsg(text){
+  const el=$('loginMsg');
+  el.textContent=text||'';
+  el.classList.toggle('hidden',!text);
+}
+
+function renderNav(){
+  const html=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
+  $('sideNav').innerHTML=html;
+  $('mobileNav').innerHTML=html;
+}
+
+function go(page){
+  current=page;
+  const p=pages.find(x=>x[0]===page)||pages[0];
+  $('pageTitle').textContent=p[1].replace(/[^\wÀ-ÿ\s]/g,'').trim();
+  $('pageSubtitle').textContent=p[2];
+  renderNav();
+  render();
+}
+
+async function login(e){
+  e.preventDefault();
+  setMsg('');
+  $('loginBtn').disabled=true;
+  $('loginBtn').textContent='Entrando...';
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  $('loginBtn').disabled=false;
+  $('loginBtn').textContent='Entrar';
+  if(error){setMsg('Email ou senha inválidos.');return;}
+  session=data.session;
+  await start();
+}
+
+async function logout(){
+  await db.auth.signOut();
+  session=null;
+  $('app').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');
+}
+
+async function start(){
+  $('loginScreen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  renderNav();
+  await loadAll();
+  go('dashboard');
+}
+
+async function loadAll(){
+  try{
+    const [ordersRes, productsRes, bairrosRes, settingsRes]=await Promise.all([
+      db.from('orders').select('*,order_items(*)').order('created_at',{ascending:false}).limit(100),
+      db.from('products').select('*').order('category').order('name'),
+      db.from('bairros').select('*').order('name'),
+      db.from('store_settings').select('*').eq('key','status').maybeSingle()
+    ]);
+    if(ordersRes.error) throw ordersRes.error;
+    if(productsRes.error) throw productsRes.error;
+    if(bairrosRes.error) throw bairrosRes.error;
+    orders=ordersRes.data||[];
+    products=productsRes.data||[];
+    bairros=bairrosRes.data||[];
+    if(settingsRes.data?.value) settings=Object.assign({manual_closed:false,closed_days:[]},settingsRes.data.value);
+    render();
+  }catch(err){
+    console.error(err);
+    $('content').innerHTML='<div class="notice">Erro ao carregar dados: '+esc(err.message||err)+'</div>';
+  }
+}
+
+function render(){
+  if(current==='dashboard') return renderDashboard();
+  if(current==='pedidos') return renderPedidos();
+  if(current==='produtos') return renderProducts('Pizza Preco');
+  if(current==='bebidas') return renderProducts('Bebida');
+  if(current==='bairros') return renderBairros();
+  if(current==='funcionamento') return renderFuncionamento();
+}
+
+function renderDashboard(){
+  const hoje=orders.filter(o=>o.data===today());
+  const faturamentoHoje=hoje.reduce((s,o)=>s+Number(o.total||0),0);
+  const novos=orders.filter(o=>o.status==='novo').length;
+  const entreguesHoje=hoje.filter(o=>o.status==='entregue').length;
+  const ticket=hoje.length?faturamentoHoje/hoje.length:0;
+  const top={};
+  orders.forEach(o=>(o.order_items||[]).forEach(i=>{top[i.name]=(top[i.name]||0)+Number(i.qty||0)}));
+  const topList=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  $('content').innerHTML=`
+    <div class="grid">
+      <div class="card"><div class="stat-label">Pedidos hoje</div><div class="stat-value">${hoje.length}</div></div>
+      <div class="card"><div class="stat-label">Faturamento hoje</div><div class="stat-value">${money(faturamentoHoje)}</div></div>
+      <div class="card"><div class="stat-label">Pedidos novos</div><div class="stat-value">${novos}</div></div>
+      <div class="card"><div class="stat-label">Ticket médio</div><div class="stat-value">${money(ticket)}</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Mais vendidos</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div>
+      ${topList.length?topList.map(([name,qty])=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>${esc(name)}</span><strong>${qty}x</strong></div>`).join(''):'<div class="notice">Ainda não há itens vendidos.</div>'}
+    </div>`;
+}
+
+function renderPedidos(){
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title">
+        <h2>Pedidos</h2>
+        <div class="row">
+          <select class="select" id="filterStatus" style="width:auto" onchange="renderPedidosList()">
+            <option value="">Todos</option>
+            <option value="novo">Novo</option>
+            <option value="preparando">Preparando</option>
+            <option value="entregue">Entregue</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+          <button class="btn small secondary" onclick="loadAll()">Atualizar</button>
+        </div>
+      </div>
+      <div id="ordersArea"></div>
+    </div>`;
+  renderPedidosList();
+}
+
+function renderPedidosList(){
+  const status=$('filterStatus')?.value||'';
+  const list=status?orders.filter(o=>o.status===status):orders;
+  $('ordersArea').innerHTML=list.length?list.map(o=>{
+    const items=(o.order_items||[]).map(i=>`${Number(i.qty||0)}x ${esc(i.name)} - ${money(Number(i.qty||0)*Number(i.price||0))}`).join('<br>');
+    return `<div class="order-card">
+      <div>
+        <strong>Pedido #${esc(o.numero||String(o.id).slice(0,8))}</strong>
+        <div class="order-meta">${esc(o.data||'')} ${esc(o.hora||'')}<br>${esc(o.cliente||'Cliente não informado')}</div>
+      </div>
+      <div>
+        <div class="order-meta">${esc(o.endereco||'')} - ${esc(o.bairro||'')}</div>
+        <div class="items">${items||'Sem itens cadastrados'}</div>
+        <div class="order-meta">Pagamento: ${esc(o.pagamento||'')} · Taxa: ${money(o.taxa)} · Total: <b>${money(o.total)}</b></div>
+      </div>
+      <div>
+        <span class="badge ${esc(o.status||'novo')}">${esc(o.status||'novo')}</span>
+        <div style="height:8px"></div>
+        <select class="select" onchange="updateStatus('${esc(o.id)}',this.value)">
+          ${['novo','preparando','entregue','cancelado'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <div style="height:8px"></div>
+        <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Imprimir</button>
+      </div>
+    </div>`;
+  }).join(''):'<div class="notice">Nenhum pedido encontrado.</div>';
+}
+
+async function updateStatus(id,status){
+  const {error}=await db.from('orders').update({status}).eq('id',id);
+  if(error){alert('Erro ao atualizar status: '+error.message);return;}
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(o) o.status=status;
+  renderPedidosList();
+}
+
+function printOrder(id){
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(!o) return;
+  const items=(o.order_items||[]).map(i=>`<tr><td>${Number(i.qty||0)}x</td><td>${esc(i.name)}</td><td>${money(Number(i.qty||0)*Number(i.price||0))}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+  body{font-family:Arial;color:#000;width:72mm;padding:8px}h1{text-align:center;font-size:17px}td{border-bottom:1px dashed #999;padding:5px;font-size:12px}table{width:100%;border-collapse:collapse}.total{text-align:right;font-size:16px;font-weight:bold}
+  </style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
+  const w=window.open('','_blank','width=360,height=640');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+
+function renderProducts(category){
+  const isBebida=category==='Bebida';
+  const list=products.filter(p=>p.category===category);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>${isBebida?'Bebidas':'Preços de Pizza'}</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input class="input" id="prodName" placeholder="${isBebida?'Refrigerante 2L':'preco_trad_media'}"></div>
+        <div class="field"><label>Preço</label><input class="input" id="prodPrice" type="number" step="0.01" placeholder="0.00"></div>
+      </div>
+      <button class="btn" onclick="addProduct('${category}')">Adicionar</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Nome</th><th>Preço</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${list.map(p=>`<tr>
+          <td><input class="input" id="name-${esc(p.id)}" value="${esc(p.name)}"></td>
+          <td><input class="input" id="price-${esc(p.id)}" type="number" step="0.01" value="${Number(p.price||0)}"></td>
+          <td>${p.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveProduct('${esc(p.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleProduct('${esc(p.id)}',${p.active===false?'true':'false'})">${p.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+async function addProduct(category){
+  const name=$('prodName').value.trim();
+  const price=Number($('prodPrice').value||0);
+  if(!name){alert('Digite o nome.');return;}
+  const {error}=await db.from('products').insert({name,price,category,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function saveProduct(id){
+  const name=$('name-'+id).value.trim();
+  const price=Number($('price-'+id).value||0);
+  const {error}=await db.from('products').update({name,price,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function toggleProduct(id,active){
+  const {error}=await db.from('products').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+function renderBairros(){
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Novo bairro</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Bairro</label><input class="input" id="bairroName" placeholder="Centro"></div>
+        <div class="field"><label>Taxa</label><input class="input" id="bairroTaxa" type="number" step="0.01" placeholder="5.00"></div>
+      </div>
+      <button class="btn" onclick="addBairro()">Adicionar bairro</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Bairro</th><th>Taxa</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${bairros.map(b=>`<tr>
+          <td><input class="input" id="bname-${esc(b.id)}" value="${esc(b.name)}"></td>
+          <td><input class="input" id="btaxa-${esc(b.id)}" type="number" step="0.01" value="${Number(b.taxa||0)}"></td>
+          <td>${b.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveBairro('${esc(b.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleBairro('${esc(b.id)}',${b.active===false?'true':'false'})">${b.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+async function addBairro(){
+  const name=$('bairroName').value.trim();
+  const taxa=Number($('bairroTaxa').value||0);
+  if(!name){alert('Digite o bairro.');return;}
+  const {error}=await db.from('bairros').insert({name,taxa,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function saveBairro(id){
+  const name=$('bname-'+id).value.trim();
+  const taxa=Number($('btaxa-'+id).value||0);
+  const {error}=await db.from('bairros').update({name,taxa,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function toggleBairro(id,active){
+  const {error}=await db.from('bairros').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+function renderFuncionamento(){
+  const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const closed=(settings.closed_days||[]).map(Number);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Status da loja</h2></div>
+      <div class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></div>
+      <button class="btn ${settings.manual_closed?'green':'red'}" onclick="toggleStore()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Dias sem funcionamento</h2></div>
+      <div class="form-grid">
+        ${days.map((d,i)=>`<label class="notice" style="margin:0"><input type="checkbox" value="${i}" ${closed.includes(i)?'checked':''} onchange="saveClosedDays()"> ${d}</label>`).join('')}
+      </div>
+    </div>`;
+}
+
+async function saveSettings(){
+  const {error}=await db.from('store_settings').upsert({key:'status',value:settings,updated_at:new Date().toISOString()},{onConflict:'key'});
+  if(error){alert('Erro: '+error.message);return;}
+}
+
+async function toggleStore(){
+  settings.manual_closed=!settings.manual_closed;
+  await saveSettings();
+  renderFuncionamento();
+}
+
+async function saveClosedDays(){
+  settings.closed_days=[...document.querySelectorAll('input[type=checkbox]:checked')].map(i=>Number(i.value));
+  await saveSettings();
+}
+
+async function init(){
+  const {data}=await db.auth.getSession();
+  session=data.session;
+  if(session) await start();
+}
+init();
+</script>
+</body>
+</html>
