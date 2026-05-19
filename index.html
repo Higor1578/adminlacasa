@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Admin La Casa da Pizza</title>
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#100704">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="La Casa Admin">
-<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Admin La Casa da Pizza</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -264,37 +266,148 @@ td{color:#ffe8d5}
 .printer-status.wait{color:var(--yellow)}
 
 
+/* ===== MODO APP MOBILE / PWA ===== */
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+body{
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.mobile-app .app{
+  grid-template-columns:1fr!important;
+}
+.mobile-app .sidebar{
+  display:none!important;
+}
+.mobile-app .main{
+  width:100%;
+  max-width:100%;
+  padding:12px!important;
+}
+.mobile-app .topbar{
+  background:rgba(16,7,4,.94);
+  position:sticky;
+  top:0;
+  z-index:40;
+  padding:10px 0;
+  margin-bottom:10px;
+  backdrop-filter:blur(10px);
+}
+.mobile-app .topbar h1{
+  font-size:21px;
+}
+.mobile-app .topbar p{
+  font-size:12px;
+}
+.mobile-app .tabs-mobile{
+  display:flex!important;
+  position:sticky;
+  top:74px;
+  z-index:39;
+  gap:8px;
+  overflow-x:auto;
+  background:rgba(16,7,4,.96);
+  padding:8px 0 10px;
+  margin-bottom:12px;
+  scrollbar-width:none;
+}
+.mobile-app .tabs-mobile::-webkit-scrollbar{display:none}
+.mobile-app .tabs-mobile button{
+  white-space:nowrap;
+  min-height:42px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--muted);
+  border-radius:999px;
+  padding:9px 13px;
+  font-weight:900;
+  font-size:13px;
+}
+.mobile-app .tabs-mobile button.active{
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#160801;
+}
+.mobile-app .grid{
+  grid-template-columns:1fr 1fr!important;
+  gap:10px!important;
+}
+.mobile-app .card{
+  border-radius:18px!important;
+  padding:14px!important;
+}
+.mobile-app .order-card{
+  grid-template-columns:1fr!important;
+  padding:13px!important;
+}
+.mobile-app .form-grid{
+  grid-template-columns:1fr!important;
+}
+.mobile-app .btn{
+  min-height:46px;
+  border-radius:14px;
+}
+.mobile-app .btn.small{
+  min-height:38px;
+  font-size:13px;
+}
+.mobile-app .input,.mobile-app .select,.mobile-app textarea{
+  min-height:46px;
+  font-size:16px;
+}
+.mobile-app table{
+  min-width:620px;
+}
+@media(max-width:520px){
+  .mobile-app .grid{grid-template-columns:1fr!important}
+}
 .install-fab{
-  position:fixed;right:14px;bottom:14px;z-index:9999;
-  border:0;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand2));
-  color:#160801;font-weight:900;padding:14px 18px;box-shadow:0 12px 32px rgba(0,0,0,.42);display:none;
+  position:fixed;
+  right:14px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:9999;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#160801;
+  font-weight:900;
+  padding:14px 18px;
+  box-shadow:0 14px 35px rgba(0,0,0,.45);
+  display:none;
 }
 .install-fab.show{display:block}
-.pwa-note{
-  position:fixed;left:12px;right:12px;bottom:76px;z-index:9998;background:#160904;
-  border:1px solid var(--line);color:var(--text);border-radius:18px;padding:13px;
-  box-shadow:0 12px 32px rgba(0,0,0,.42);display:none;font-size:15px;line-height:1.4;
+.install-card{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:calc(76px + env(safe-area-inset-bottom));
+  z-index:9998;
+  background:#160904;
+  border:1px solid var(--line);
+  color:var(--text);
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 14px 38px rgba(0,0,0,.5);
+  display:none;
+  font-size:15px;
+  line-height:1.45;
 }
-.pwa-note.show{display:block}.pwa-note strong{color:var(--brand2)}
-@media(max-width:850px){
-  body{max-width:480px;margin:0 auto;overflow-x:hidden}
-  .btn{min-height:46px}
-  .input,.select,textarea{font-size:16px;min-height:46px}
+.install-card.show{display:block}
+.install-card strong{color:var(--brand2)}
+.install-actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+  flex-wrap:wrap;
 }
 
 </style>
 </head>
 <body>
-
-<button id="installBtn" class="install-fab" onclick="installApp()">📲 Instalar</button>
-<div id="pwaNote" class="pwa-note">
-  <strong>Instalar no aparelho</strong><br>
-  Android/Chrome: toque em <b>Instalar</b>.<br>
-  iPhone: Compartilhar → Adicionar à Tela de Início.
-  <div style="height:8px"></div>
-  <button class="btn small secondary" onclick="document.getElementById('pwaNote').classList.remove('show')">Fechar</button>
-</div>
-
 
 <section id="loginScreen" class="login">
   <form class="login-box" onsubmit="login(event)">
@@ -339,6 +452,17 @@ td{color:#ffe8d5}
     <div id="content"></div>
   </main>
 </section>
+
+
+<button id="installBtn" class="install-fab" onclick="installApp()">📲 Instalar</button>
+<div id="installCard" class="install-card">
+  <strong>Instalar o painel no aparelho</strong><br>
+  <span id="installText">No Android, toque em Instalar. No iPhone/iPad, toque em Compartilhar e depois “Adicionar à Tela de Início”.</span>
+  <div class="install-actions">
+    <button class="btn small" onclick="installApp()">Instalar agora</button>
+    <button class="btn small secondary" onclick="hideInstallCard()">Fechar</button>
+  </div>
+</div>
 
 <script>
 const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
@@ -410,6 +534,8 @@ async function logout(){
 }
 
 async function start(){
+  applyMobileAppMode();
+  showInstallButton();
   $('loginScreen').classList.add('hidden');
   $('app').classList.remove('hidden');
   renderNav();
@@ -534,20 +660,22 @@ function printOrder(id){
   const items=(o.order_items||[]).map(i=>`<tr><td>${Number(i.qty||0)}x</td><td>${esc(i.name)}</td><td>${money(Number(i.qty||0)*Number(i.price||0))}</td></tr>`).join('');
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
   @page{size:58mm auto;margin:0}
-  body{font-family:Arial,sans-serif;color:#000;width:58mm;padding:10px;font-size:15px;line-height:1.35}
-  h1{text-align:center;font-size:26px;margin:0 0 3px;font-weight:900}
+  body{font-family:Arial,sans-serif;color:#000;width:58mm;padding:10px;font-size:15px}
+  h1{text-align:center;font-size:26px;margin:0 0 4px;font-weight:900}
   h2{text-align:center;font-size:22px;margin:0 0 8px;font-weight:900}
-  p{margin:7px 0}.center{text-align:center}.line{border-top:1px dashed #000;margin:9px 0}
+  p{margin:7px 0;line-height:1.4}
+  .line{border-top:1px dashed #000;margin:9px 0}
   table{width:100%;border-collapse:collapse;margin:8px 0}
   td{border-bottom:1px dashed #999;padding:8px 2px;font-size:15px;vertical-align:top}
   td:last-child{text-align:right;white-space:nowrap;font-weight:bold}
   .total{text-align:center;font-size:24px;font-weight:900;border:2px solid #000;padding:8px;margin-top:8px}
+  .center{text-align:center}
   </style></head><body>
   <h1>LA CASA</h1><h2>DA PIZZA</h2>
   <div class="center"><b>Pedido #${esc(o.numero||'')}</b><br>${esc(o.data||'')} ${esc(o.hora||'')}</div>
   <div class="line"></div>
   <p><b>Cliente:</b><br>${esc(o.cliente||'Nao informado')}</p>
-  <p><b>Endereço:</b><br>${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p>
+  <p><b>Endereco:</b><br>${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p>
   <div class="line"></div>
   <p><b>Itens do pedido:</b></p><table>${items}</table>
   <div class="line"></div>
@@ -560,6 +688,159 @@ function printOrder(id){
   <p class="center"><b>OBRIGADO!</b><br>Volte sempre</p>
   <br><br><br><br><br>
   </body></html>`;
+  const w=window.open('','_blank','width=360,height=640');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+.printer-status{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
+
+
+/* ===== MODO APP MOBILE / PWA ===== */
+html,body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+body{
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.mobile-app .app{
+  grid-template-columns:1fr!important;
+}
+.mobile-app .sidebar{
+  display:none!important;
+}
+.mobile-app .main{
+  width:100%;
+  max-width:100%;
+  padding:12px!important;
+}
+.mobile-app .topbar{
+  background:rgba(16,7,4,.94);
+  position:sticky;
+  top:0;
+  z-index:40;
+  padding:10px 0;
+  margin-bottom:10px;
+  backdrop-filter:blur(10px);
+}
+.mobile-app .topbar h1{
+  font-size:21px;
+}
+.mobile-app .topbar p{
+  font-size:12px;
+}
+.mobile-app .tabs-mobile{
+  display:flex!important;
+  position:sticky;
+  top:74px;
+  z-index:39;
+  gap:8px;
+  overflow-x:auto;
+  background:rgba(16,7,4,.96);
+  padding:8px 0 10px;
+  margin-bottom:12px;
+  scrollbar-width:none;
+}
+.mobile-app .tabs-mobile::-webkit-scrollbar{display:none}
+.mobile-app .tabs-mobile button{
+  white-space:nowrap;
+  min-height:42px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--muted);
+  border-radius:999px;
+  padding:9px 13px;
+  font-weight:900;
+  font-size:13px;
+}
+.mobile-app .tabs-mobile button.active{
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#160801;
+}
+.mobile-app .grid{
+  grid-template-columns:1fr 1fr!important;
+  gap:10px!important;
+}
+.mobile-app .card{
+  border-radius:18px!important;
+  padding:14px!important;
+}
+.mobile-app .order-card{
+  grid-template-columns:1fr!important;
+  padding:13px!important;
+}
+.mobile-app .form-grid{
+  grid-template-columns:1fr!important;
+}
+.mobile-app .btn{
+  min-height:46px;
+  border-radius:14px;
+}
+.mobile-app .btn.small{
+  min-height:38px;
+  font-size:13px;
+}
+.mobile-app .input,.mobile-app .select,.mobile-app textarea{
+  min-height:46px;
+  font-size:16px;
+}
+.mobile-app table{
+  min-width:620px;
+}
+@media(max-width:520px){
+  .mobile-app .grid{grid-template-columns:1fr!important}
+}
+.install-fab{
+  position:fixed;
+  right:14px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:9999;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#160801;
+  font-weight:900;
+  padding:14px 18px;
+  box-shadow:0 14px 35px rgba(0,0,0,.45);
+  display:none;
+}
+.install-fab.show{display:block}
+.install-card{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:calc(76px + env(safe-area-inset-bottom));
+  z-index:9998;
+  background:#160904;
+  border:1px solid var(--line);
+  color:var(--text);
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 14px 38px rgba(0,0,0,.5);
+  display:none;
+  font-size:15px;
+  line-height:1.45;
+}
+.install-card.show{display:block}
+.install-card strong{color:var(--brand2)}
+.install-actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+
+</style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
   const w=window.open('','_blank','width=360,height=640');
   w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
 }
@@ -806,30 +1087,25 @@ function buildEscPosOrder(order){
   const LEFT=ESC+'a\x00';
   const NORMAL=GS+'!\x00';
   const TALL=GS+'!\x01';
-  const BIG=GS+'!\x11';
+  const DOUBLE=GS+'!\x11';
   const CUT=GS+'V\x41\x03';
   const LINE='-'.repeat(lineWidth());
   const items=order.order_items||[];
 
   let out='';
   out+=INIT;
-  out+=CENTER+BOLD_ON+BIG+'LA CASA\n'+NORMAL;
-  out+=CENTER+BOLD_ON+BIG+'DA PIZZA\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+BOLD_ON+DOUBLE+'LA CASA\n'+NORMAL;
+  out+=CENTER+BOLD_ON+DOUBLE+'DA PIZZA\n'+NORMAL+BOLD_OFF;
   out+=CENTER+LINE+'\n';
-  out+=CENTER+BOLD_ON+BIG+'#'+(order.numero||String(order.id).slice(0,8))+'\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+BOLD_ON+DOUBLE+'#'+(order.numero||String(order.id).slice(0,8))+'\n'+NORMAL+BOLD_OFF;
   out+=CENTER+(order.data||'')+'  '+(order.hora||'')+'\n';
-  out+='\n';
-
-  out+=LEFT+BOLD_ON+TALL+'CLIENTE\n'+NORMAL+BOLD_OFF;
+  out+='\n'+LEFT+BOLD_ON+TALL+'CLIENTE\n'+NORMAL+BOLD_OFF;
   out+=wrapText(order.cliente||'Nao informado')+'\n\n';
-
   out+=BOLD_ON+TALL+'ENDERECO\n'+NORMAL+BOLD_OFF;
   out+=wrapText((order.endereco||'')+' - '+(order.bairro||''))+'\n\n';
-
   out+=LINE+'\n';
   out+=CENTER+BOLD_ON+TALL+'ITENS DO PEDIDO\n'+NORMAL+BOLD_OFF;
   out+=LINE+'\n';
-
   items.forEach((i,idx)=>{
     const qty=Number(i.qty||0);
     const price=Number(i.price||0);
@@ -837,25 +1113,19 @@ function buildEscPosOrder(order){
     out+=BOLD_ON+wrapText(i.name||'Item')+'\n'+BOLD_OFF;
     out+=fitLeftRight('Unit: '+moneyPlain(price),moneyPlain(qty*price))+'\n\n';
   });
-
   out+=LINE+'\n';
   out+=BOLD_ON+TALL+fitLeftRight('Taxa',moneyPlain(order.taxa))+'\n'+NORMAL+BOLD_OFF;
-  out+=BOLD_ON+BIG+fitLeftRight('TOTAL',moneyPlain(order.total))+'\n'+NORMAL+BOLD_OFF;
+  out+=BOLD_ON+DOUBLE+fitLeftRight('TOTAL',moneyPlain(order.total))+'\n'+NORMAL+BOLD_OFF;
   out+=LINE+'\n\n';
-
   out+=BOLD_ON+TALL+'PAGAMENTO\n'+NORMAL+BOLD_OFF;
   out+=wrapText(order.pagamento||'Nao informado')+'\n';
   if(order.troco) out+='Troco: '+order.troco+'\n';
-  if(order.obs){
-    out+='\n'+BOLD_ON+'OBS\n'+BOLD_OFF;
-    out+=wrapText(order.obs)+'\n';
-  }
-
+  if(order.obs) out+='\n'+BOLD_ON+'OBS\n'+BOLD_OFF+wrapText(order.obs)+'\n';
   out+='\n'+LINE+'\n';
   out+=CENTER+BOLD_ON+'OBRIGADO!\n'+BOLD_OFF;
   out+=CENTER+'Volte sempre\n';
   out+=LINE+'\n';
-  out+='\n\n\n\n\n\n';
+  out+='\n\n\n\n\n\n\n';
   out+=CUT;
   return textToBytes(out);
 }
@@ -959,32 +1229,89 @@ async function testThermalPrinter(){
 }
 
 
-// ===== INSTALAÇÃO NO APARELHO / PWA =====
+// ===== MODO APP MOBILE E INSTALACAO =====
 let deferredInstallPrompt=null;
+
+function isMobileDevice(){
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 850;
+}
+
+function applyMobileAppMode(){
+  document.body.classList.toggle('mobile-app', isMobileDevice());
+}
+
+function isIosDevice(){
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function isStandaloneMode(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function showInstallButton(){
+  if(isStandaloneMode()) return;
+  const btn=document.getElementById('installBtn');
+  const card=document.getElementById('installCard');
+  const text=document.getElementById('installText');
+
+  if(isIosDevice()){
+    if(text) text.innerHTML='No iPhone/iPad, toque no botão <b>Compartilhar</b> do Safari e escolha <b>Adicionar à Tela de Início</b>.';
+    if(btn) btn.classList.add('show');
+    return;
+  }
+
+  if(deferredInstallPrompt){
+    if(text) text.innerHTML='No Android, toque em <b>Instalar agora</b> para adicionar o painel como app.';
+    if(btn) btn.classList.add('show');
+  }else if(isMobileDevice()){
+    if(text) text.innerHTML='Se o botão automático não aparecer, abra o menu do Chrome e toque em <b>Adicionar à tela inicial</b>.';
+    if(btn) btn.classList.add('show');
+  }
+}
+
+function hideInstallCard(){
+  const card=document.getElementById('installCard');
+  if(card) card.classList.remove('show');
+}
+
 window.addEventListener('beforeinstallprompt',event=>{
   event.preventDefault();
   deferredInstallPrompt=event;
-  const btn=document.getElementById('installBtn');
-  if(btn) btn.classList.add('show');
+  showInstallButton();
 });
+
 async function installApp(){
-  const note=document.getElementById('pwaNote');
-  if(!deferredInstallPrompt){
-    if(note) note.classList.add('show');
+  const card=document.getElementById('installCard');
+
+  if(isIosDevice() || !deferredInstallPrompt){
+    if(card) card.classList.add('show');
     return;
   }
+
   deferredInstallPrompt.prompt();
   await deferredInstallPrompt.userChoice;
   deferredInstallPrompt=null;
+
   const btn=document.getElementById('installBtn');
   if(btn) btn.classList.remove('show');
+  if(card) card.classList.remove('show');
 }
+
 window.addEventListener('appinstalled',()=>{
   const btn=document.getElementById('installBtn');
+  const card=document.getElementById('installCard');
   if(btn) btn.classList.remove('show');
+  if(card) card.classList.remove('show');
 });
+
+window.addEventListener('resize',applyMobileAppMode);
+applyMobileAppMode();
+
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    showInstallButton();
+  });
 }
 
 async function init(){
