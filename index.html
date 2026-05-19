@@ -2,8 +2,13 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="La Casa Admin">
+<meta name="theme-color" content="#100704">
 <title>Admin La Casa da Pizza</title>
+<link rel="manifest" href="manifest.webmanifest">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -257,6 +262,14 @@ td{color:#ffe8d5}
 .printer-status.err{color:var(--red)}
 .printer-status.wait{color:var(--yellow)}
 
+
+.install-fab{position:fixed;right:14px;bottom:14px;z-index:999;border:0;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#160801;font-weight:900;padding:14px 18px;box-shadow:0 12px 32px rgba(0,0,0,.35);display:none}
+.install-fab.show{display:block}
+.pwa-note{position:fixed;left:12px;right:12px;bottom:76px;z-index:998;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:18px;padding:13px;box-shadow:0 12px 32px rgba(0,0,0,.35);display:none;font-size:15px;line-height:1.4}
+.pwa-note.show{display:block}.pwa-note strong{color:var(--brand2)}
+.printer-panel{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#160904;border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:14px}
+.printer-status{font-size:13px;color:var(--muted);width:100%}.printer-status.ok{color:var(--green)}.printer-status.err{color:var(--red)}.printer-status.wait{color:var(--yellow)}
+
 </style>
 </head>
 <body>
@@ -304,6 +317,15 @@ td{color:#ffe8d5}
     <div id="content"></div>
   </main>
 </section>
+
+
+<button id="installBtn" class="install-fab" onclick="installApp()">📲 Instalar</button>
+<div id="pwaNote" class="pwa-note">
+  <strong>Instalar no aparelho</strong><br>
+  Android/Chrome: toque em <b>Instalar</b>. iPhone: Compartilhar → Adicionar à Tela de Início.
+  <div style="height:8px"></div>
+  <button class="btn small secondary" onclick="document.getElementById('pwaNote').classList.remove('show')">Fechar</button>
+</div>
 
 <script>
 const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
@@ -498,18 +520,37 @@ function printOrder(id){
   if(!o) return;
   const items=(o.order_items||[]).map(i=>`<tr><td>${Number(i.qty||0)}x</td><td>${esc(i.name)}</td><td>${money(Number(i.qty||0)*Number(i.price||0))}</td></tr>`).join('');
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-  body{font-family:Arial;color:#000;width:72mm;padding:8px}h1{text-align:center;font-size:17px}td{border-bottom:1px dashed #999;padding:5px;font-size:12px}table{width:100%;border-collapse:collapse}.total{text-align:right;font-size:16px;font-weight:bold}
-  
-.printer-panel{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-  background:#160904;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:12px;
-  margin-bottom:14px;
+  @page{size:58mm auto;margin:0}
+  body{font-family:Arial,sans-serif;color:#000;width:58mm;padding:10px;font-size:15px}
+  h1{text-align:center;font-size:26px;margin:0 0 4px;font-weight:900}
+  h2{text-align:center;font-size:22px;margin:0 0 8px;font-weight:900}
+  p{margin:7px 0;line-height:1.4}
+  .line{border-top:1px dashed #000;margin:9px 0}
+  table{width:100%;border-collapse:collapse;margin:8px 0}
+  td{border-bottom:1px dashed #999;padding:8px 2px;font-size:15px;vertical-align:top}
+  td:last-child{text-align:right;white-space:nowrap;font-weight:bold}
+  .total{text-align:center;font-size:24px;font-weight:900;border:2px solid #000;padding:8px;margin-top:8px}
+  .center{text-align:center}
+  </style></head><body>
+  <h1>LA CASA</h1><h2>DA PIZZA</h2>
+  <div class="center"><b>Pedido #${esc(o.numero||'')}</b><br>${esc(o.data||'')} ${esc(o.hora||'')}</div>
+  <div class="line"></div>
+  <p><b>Cliente:</b><br>${esc(o.cliente||'Nao informado')}</p>
+  <p><b>Endereco:</b><br>${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p>
+  <div class="line"></div>
+  <p><b>Itens do pedido:</b></p><table>${items}</table>
+  <div class="line"></div>
+  <p>Taxa de entrega: <b>${money(o.taxa)}</b></p>
+  <div class="total">TOTAL: ${money(o.total)}</div>
+  <p><b>Pagamento:</b> ${esc(o.pagamento||'')}</p>
+  ${o.troco?`<p><b>Troco:</b> ${esc(o.troco)}</p>`:''}
+  ${o.obs?`<p><b>Obs:</b> ${esc(o.obs)}</p>`:''}
+  <div class="line"></div>
+  <p class="center"><b>OBRIGADO!</b><br>Volte sempre</p>
+  <br><br><br><br><br>
+  </body></html>`;
+  const w=window.open('','_blank','width=360,height=640');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
 }
 .printer-status{
   font-size:13px;
@@ -519,6 +560,14 @@ function printOrder(id){
 .printer-status.ok{color:var(--green)}
 .printer-status.err{color:var(--red)}
 .printer-status.wait{color:var(--yellow)}
+
+
+.install-fab{position:fixed;right:14px;bottom:14px;z-index:999;border:0;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#160801;font-weight:900;padding:14px 18px;box-shadow:0 12px 32px rgba(0,0,0,.35);display:none}
+.install-fab.show{display:block}
+.pwa-note{position:fixed;left:12px;right:12px;bottom:76px;z-index:998;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:18px;padding:13px;box-shadow:0 12px 32px rgba(0,0,0,.35);display:none;font-size:15px;line-height:1.4}
+.pwa-note.show{display:block}.pwa-note strong{color:var(--brand2)}
+.printer-panel{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#160904;border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:14px}
+.printer-status{font-size:13px;color:var(--muted);width:100%}.printer-status.ok{color:var(--green)}.printer-status.err{color:var(--red)}.printer-status.wait{color:var(--yellow)}
 
 </style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
   const w=window.open('','_blank','width=360,height=640');
@@ -758,47 +807,46 @@ function wrapText(text,indent=''){
 }
 
 function buildEscPosOrder(order){
-  const ESC='\x1b';
-  const GS='\x1d';
-  const INIT=ESC+'@';
-  const BOLD_ON=ESC+'E\x01';
-  const BOLD_OFF=ESC+'E\x00';
-  const CENTER=ESC+'a\x01';
-  const LEFT=ESC+'a\x00';
-  const NORMAL=GS+'!\x00';
-  const DOUBLE=GS+'!\x11';
+  const ESC='\x1b', GS='\x1d';
+  const INIT=ESC+'@', BOLD_ON=ESC+'E\x01', BOLD_OFF=ESC+'E\x00';
+  const CENTER=ESC+'a\x01', LEFT=ESC+'a\x00';
+  const NORMAL=GS+'!\x00', TALL=GS+'!\x01', BIG=GS+'!\x11';
   const CUT=GS+'V\x41\x03';
   const LINE='-'.repeat(lineWidth());
   const items=order.order_items||[];
-
   let out='';
   out+=INIT;
-  out+=CENTER+BOLD_ON+DOUBLE+'LA CASA DA PIZZA\n'+NORMAL+BOLD_OFF;
-  out+=CENTER+'PEDIDO #'+(order.numero||String(order.id).slice(0,8))+'\n';
-  out+=CENTER+(order.data||'')+' '+(order.hora||'')+'\n';
-  out+=LEFT+LINE+'\n';
-  out+=BOLD_ON+'CLIENTE\n'+BOLD_OFF;
-  out+=wrapText(order.cliente||'Nao informado')+'\n';
-  out+=BOLD_ON+'ENDERECO\n'+BOLD_OFF;
-  out+=wrapText((order.endereco||'')+' - '+(order.bairro||''))+'\n';
+  out+=CENTER+BOLD_ON+BIG+'LA CASA\n'+NORMAL;
+  out+=CENTER+BOLD_ON+BIG+'DA PIZZA\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+LINE+'\n';
+  out+=CENTER+BOLD_ON+BIG+'#'+(order.numero||String(order.id).slice(0,8))+'\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+(order.data||'')+'  '+(order.hora||'')+'\n';
+  out+='\n'+LEFT+BOLD_ON+TALL+'CLIENTE\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(order.cliente||'Nao informado')+'\n\n';
+  out+=BOLD_ON+TALL+'ENDERECO\n'+NORMAL+BOLD_OFF;
+  out+=wrapText((order.endereco||'')+' - '+(order.bairro||''))+'\n\n';
   out+=LINE+'\n';
-  out+=BOLD_ON+'ITENS\n'+BOLD_OFF;
-  items.forEach(i=>{
-    const qty=Number(i.qty||0);
-    const price=Number(i.price||0);
-    out+=wrapText(qty+'x '+(i.name||''))+'\n';
-    out+=fitLeftRight('',moneyPlain(qty*price))+'\n';
+  out+=CENTER+BOLD_ON+TALL+'ITENS DO PEDIDO\n'+NORMAL+BOLD_OFF;
+  out+=LINE+'\n';
+  items.forEach((i,idx)=>{
+    const qty=Number(i.qty||0), price=Number(i.price||0);
+    out+=BOLD_ON+TALL+(idx+1)+') '+qty+'x\n'+NORMAL+BOLD_OFF;
+    out+=BOLD_ON+wrapText(i.name||'Item')+'\n'+BOLD_OFF;
+    out+=fitLeftRight('Unit: '+moneyPlain(price),moneyPlain(qty*price))+'\n\n';
   });
   out+=LINE+'\n';
-  out+=fitLeftRight('Taxa entrega',moneyPlain(order.taxa))+'\n';
-  out+=BOLD_ON+fitLeftRight('TOTAL',moneyPlain(order.total))+BOLD_OFF+'\n';
+  out+=BOLD_ON+TALL+fitLeftRight('Taxa',moneyPlain(order.taxa))+'\n'+NORMAL+BOLD_OFF;
+  out+=BOLD_ON+BIG+fitLeftRight('TOTAL',moneyPlain(order.total))+'\n'+NORMAL+BOLD_OFF;
+  out+=LINE+'\n\n';
+  out+=BOLD_ON+TALL+'PAGAMENTO\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(order.pagamento||'Nao informado')+'\n';
+  if(order.troco)out+='Troco: '+order.troco+'\n';
+  if(order.obs){out+='\n'+BOLD_ON+'OBS\n'+BOLD_OFF+wrapText(order.obs)+'\n'}
+  out+='\n'+LINE+'\n';
+  out+=CENTER+BOLD_ON+'OBRIGADO!\n'+BOLD_OFF;
+  out+=CENTER+'Volte sempre\n';
   out+=LINE+'\n';
-  out+='Pagamento: '+(order.pagamento||'')+'\n';
-  if(order.troco) out+='Troco: '+order.troco+'\n';
-  if(order.obs) out+='Obs: '+wrapText(order.obs,'')+'\n';
-  out+=LINE+'\n';
-  out+=CENTER+'Obrigado pela preferencia!\n';
-  out+='\n\n\n';
+  out+='\n\n\n\n\n\n\n';
   out+=CUT;
   return textToBytes(out);
 }
@@ -900,6 +948,14 @@ async function testThermalPrinter(){
     setPrinterStatus('Erro no teste: '+(e.message||e),'err');
   }
 }
+
+
+// ===== INSTALACAO PWA =====
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;const btn=document.getElementById('installBtn');if(btn)btn.classList.add('show')});
+async function installApp(){const note=document.getElementById('pwaNote');if(!deferredInstallPrompt){if(note)note.classList.add('show');return}deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;const btn=document.getElementById('installBtn');if(btn)btn.classList.remove('show')}
+window.addEventListener('appinstalled',()=>{const btn=document.getElementById('installBtn');if(btn)btn.classList.remove('show')});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 
 async function init(){
   const {data}=await db.auth.getSession();
