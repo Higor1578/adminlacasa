@@ -393,6 +393,88 @@ td{color:#ffe8d5}
 .install-card strong{color:var(--brand2)}
 .install-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 
+
+/* ===== CORRECAO BOTAO INSTALAR ===== */
+@media(max-width:850px){
+  #installBtn{
+    display:block!important;
+  }
+}
+.install-fab{
+  display:block;
+}
+
+
+/* ===== CORRECAO NAVEGACAO MOBILE ===== */
+@media(max-width:850px){
+  .topbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:40!important;
+    padding:12px 0 10px!important;
+    margin-bottom:10px!important;
+  }
+  .tabs-mobile{
+    display:grid!important;
+    grid-template-columns:repeat(6,auto);
+    gap:6px!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    top:auto!important;
+    z-index:9997!important;
+    background:#100704!important;
+    border-top:1px solid var(--line)!important;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+    box-shadow:0 -10px 30px rgba(0,0,0,.35)!important;
+  }
+  .tabs-mobile::-webkit-scrollbar{display:none!important}
+  .tabs-mobile button{
+    min-width:84px!important;
+    min-height:50px!important;
+    white-space:normal!important;
+    text-align:center!important;
+    border-radius:14px!important;
+    padding:7px 8px!important;
+    font-size:11px!important;
+    line-height:1.15!important;
+    border:1px solid var(--line)!important;
+    background:var(--panel)!important;
+    color:var(--muted)!important;
+  }
+  .tabs-mobile button.active{
+    background:linear-gradient(135deg,var(--brand),var(--brand2))!important;
+    color:#160801!important;
+  }
+  .main{
+    padding-bottom:96px!important;
+  }
+  .topbar .row{
+    width:100%;
+    justify-content:flex-start;
+  }
+  .topbar{
+    flex-direction:column;
+    gap:8px;
+  }
+  .install-fab{
+    bottom:calc(86px + env(safe-area-inset-bottom))!important;
+  }
+  .install-card{
+    bottom:calc(148px + env(safe-area-inset-bottom))!important;
+  }
+}
+@media(max-width:390px){
+  .tabs-mobile button{
+    min-width:76px!important;
+    font-size:10.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -442,7 +524,7 @@ td{color:#ffe8d5}
 </section>
 
 
-<button id="installBtn" class="install-fab" onclick="installApp()">📲 Instalar</button>
+<button id="installBtn" class="install-fab show" onclick="installApp()">📲 Instalar</button>
 <div id="installCard" class="install-card">
   <strong>Instalar o painel no aparelho</strong><br>
   <span id="installText">Android: toque em Instalar. iPhone: Compartilhar → Adicionar à Tela de Início.</span>
@@ -486,8 +568,17 @@ function setMsg(text){
 
 function renderNav(){
   const html=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
+  const mobileLabels={
+    dashboard:'📊<br>Dash',
+    pedidos:'📦<br>Pedidos',
+    produtos:'🍕<br>Pizza',
+    bebidas:'🥤<br>Bebidas',
+    bairros:'🛵<br>Bairros',
+    funcionamento:'🕒<br>Loja'
+  };
+  const mobileHtml=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${mobileLabels[p[0]]||p[1]}</button>`).join('');
   $('sideNav').innerHTML=html;
-  $('mobileNav').innerHTML=html;
+  $('mobileNav').innerHTML=mobileHtml;
 }
 
 function go(page){
@@ -795,6 +886,88 @@ function printOrder(id){
 .install-card.show{display:block}
 .install-card strong{color:var(--brand2)}
 .install-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+
+/* ===== CORRECAO BOTAO INSTALAR ===== */
+@media(max-width:850px){
+  #installBtn{
+    display:block!important;
+  }
+}
+.install-fab{
+  display:block;
+}
+
+
+/* ===== CORRECAO NAVEGACAO MOBILE ===== */
+@media(max-width:850px){
+  .topbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:40!important;
+    padding:12px 0 10px!important;
+    margin-bottom:10px!important;
+  }
+  .tabs-mobile{
+    display:grid!important;
+    grid-template-columns:repeat(6,auto);
+    gap:6px!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    top:auto!important;
+    z-index:9997!important;
+    background:#100704!important;
+    border-top:1px solid var(--line)!important;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+    box-shadow:0 -10px 30px rgba(0,0,0,.35)!important;
+  }
+  .tabs-mobile::-webkit-scrollbar{display:none!important}
+  .tabs-mobile button{
+    min-width:84px!important;
+    min-height:50px!important;
+    white-space:normal!important;
+    text-align:center!important;
+    border-radius:14px!important;
+    padding:7px 8px!important;
+    font-size:11px!important;
+    line-height:1.15!important;
+    border:1px solid var(--line)!important;
+    background:var(--panel)!important;
+    color:var(--muted)!important;
+  }
+  .tabs-mobile button.active{
+    background:linear-gradient(135deg,var(--brand),var(--brand2))!important;
+    color:#160801!important;
+  }
+  .main{
+    padding-bottom:96px!important;
+  }
+  .topbar .row{
+    width:100%;
+    justify-content:flex-start;
+  }
+  .topbar{
+    flex-direction:column;
+    gap:8px;
+  }
+  .install-fab{
+    bottom:calc(86px + env(safe-area-inset-bottom))!important;
+  }
+  .install-card{
+    bottom:calc(148px + env(safe-area-inset-bottom))!important;
+  }
+}
+@media(max-width:390px){
+  .tabs-mobile button{
+    min-width:76px!important;
+    font-size:10.5px!important;
+  }
+}
 
 </style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
   const w=window.open('','_blank','width=360,height=640');
@@ -1178,15 +1351,13 @@ async function testThermalPrinter(){
 }
 
 
-// ===== INSTALACAO PWA SEGURA =====
+
+
+// ===== INSTALACAO PWA ROBUSTA =====
 let deferredInstallPrompt=null;
 
 function isIosDevice(){
   return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-function isMobileDevice(){
-  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 850;
 }
 
 function isStandaloneMode(){
@@ -1201,18 +1372,7 @@ function hideInstallCard(){
 function showInstallButton(){
   if(isStandaloneMode()) return;
   const btn=document.getElementById('installBtn');
-  const text=document.getElementById('installText');
-  if(!btn) return;
-
-  if(isMobileDevice()){
-    btn.classList.add('show');
-  }
-
-  if(isIosDevice() && text){
-    text.innerHTML='No iPhone/iPad, abra pelo Safari, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.';
-  }else if(text){
-    text.innerHTML='No Android, toque em <b>Instalar agora</b>. Se não abrir, use o menu do Chrome e escolha <b>Adicionar à tela inicial</b>.';
-  }
+  if(btn) btn.classList.add('show');
 }
 
 window.addEventListener('beforeinstallprompt',event=>{
@@ -1223,19 +1383,32 @@ window.addEventListener('beforeinstallprompt',event=>{
 
 async function installApp(){
   const card=document.getElementById('installCard');
+  const text=document.getElementById('installText');
 
-  if(!deferredInstallPrompt){
+  if(isStandaloneMode()){
+    if(text) text.innerHTML='O painel já está instalado como app neste aparelho.';
     if(card) card.classList.add('show');
     return;
   }
 
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt=null;
+  if(isIosDevice()){
+    if(text) text.innerHTML='No iPhone/iPad, abra no <b>Safari</b>, toque no botão <b>Compartilhar</b> e escolha <b>Adicionar à Tela de Início</b>.';
+    if(card) card.classList.add('show');
+    return;
+  }
 
-  const btn=document.getElementById('installBtn');
-  if(btn) btn.classList.remove('show');
-  if(card) card.classList.remove('show');
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    const btn=document.getElementById('installBtn');
+    if(btn) btn.classList.remove('show');
+    if(card) card.classList.remove('show');
+    return;
+  }
+
+  if(text) text.innerHTML='No Android, abra no <b>Chrome</b>, toque nos <b>3 pontinhos</b> e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>. Se não aparecer, aguarde alguns segundos e recarregue a página.';
+  if(card) card.classList.add('show');
 }
 
 window.addEventListener('appinstalled',()=>{
