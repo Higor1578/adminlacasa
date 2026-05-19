@@ -204,6 +204,27 @@ td{color:#ffe8d5}
   font-size:14px;
 }
 .tabs-mobile{display:none}
+
+.bt-panel{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
+}
+.bt-status{
+  font-size:12px;
+  color:var(--muted);
+  width:100%;
+}
+.bt-ok{color:var(--green)}
+.bt-err{color:var(--red)}
+.bt-wait{color:var(--blue)}
+
 @media(max-width:850px){
   .app{grid-template-columns:1fr}
   .sidebar{display:none}
@@ -295,6 +316,11 @@ let orders=[];
 let products=[];
 let bairros=[];
 let settings={manual_closed:false,closed_days:[]};
+
+const PRINT_SERVICE='000018f0-0000-1000-8000-00805f9b34fb';
+const PRINT_CHAR='00002af1-0000-1000-8000-00805f9b34fb';
+let btDevice=null;
+let btChar=null;
 
 const pages=[
   ['dashboard','📊 Dashboard','Resumo geral'],
@@ -430,8 +456,10 @@ function renderPedidos(){
           <button class="btn small secondary" onclick="loadAll()">Atualizar</button>
         </div>
       </div>
+      <div id="btPanel"></div>
       <div id="ordersArea"></div>
     </div>`;
+  renderBTPanel();
   renderPedidosList();
 }
 
@@ -458,6 +486,7 @@ function renderPedidosList(){
         </select>
         <div style="height:8px"></div>
         <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Imprimir</button>
+        <button class="btn small blue" onclick="printOrderBT('${esc(o.id)}')">BT</button>
       </div>
     </div>`;
   }).join(''):'<div class="notice">Nenhum pedido encontrado.</div>';
@@ -469,6 +498,140 @@ async function updateStatus(id,status){
   const o=orders.find(x=>String(x.id)===String(id));
   if(o) o.status=status;
   renderPedidosList();
+}
+
+
+function renderBTPanel(){
+  const el=$('btPanel');
+  if(!el) return;
+  const connected=!!btChar;
+  el.innerHTML=`
+    <div class="bt-panel">
+      <button class="btn small blue" onclick="connectBluetoothPrinter()" ${connected?'disabled':''}>${connected?'Bluetooth conectado':'Conectar impressora Bluetooth'}</button>
+      <button class="btn small secondary" onclick="disconnectBluetoothPrinter()" ${connected?'':'disabled'}>Desconectar</button>
+      <button class="btn small secondary" onclick="testBluetoothPrint()" ${connected?'':'disabled'}>Teste BT</button>
+      <div id="btStatus" class="bt-status ${connected?'bt-ok':''}">${connected?'Impressora pronta para imprimir via Bluetooth.':'Use Chrome/Edge no Android ou Windows. No iPhone geralmente o Web Bluetooth não funciona.'}</div>
+    </div>`;
+}
+
+function setBTStatus(msg,type='wait'){
+  const el=$('btStatus');
+  if(!el) return;
+  el.textContent=msg;
+  el.className='bt-status '+(type==='ok'?'bt-ok':type==='err'?'bt-err':'bt-wait');
+}
+
+async function connectBluetoothPrinter(){
+  if(!navigator.bluetooth){
+    alert('Seu navegador não suporta Web Bluetooth. Use Chrome/Edge no Android ou Windows.');
+    return;
+  }
+  try{
+    setBTStatus('Abrindo lista de impressoras...','wait');
+    btDevice=await navigator.bluetooth.requestDevice({
+      acceptAllDevices:true,
+      optionalServices:[PRINT_SERVICE]
+    });
+    setBTStatus('Conectando em '+(btDevice.name||'impressora')+'...','wait');
+    const server=await btDevice.gatt.connect();
+    const service=await server.getPrimaryService(PRINT_SERVICE);
+    btChar=await service.getCharacteristic(PRINT_CHAR);
+    btDevice.addEventListener('gattserverdisconnected',()=>{
+      btChar=null;
+      renderBTPanel();
+    });
+    renderBTPanel();
+    setBTStatus('Conectada: '+(btDevice.name||'Impressora Bluetooth'),'ok');
+  }catch(e){
+    console.error(e);
+    btChar=null;
+    renderBTPanel();
+    setBTStatus('Erro ao conectar: '+(e.message||e),'err');
+  }
+}
+
+function disconnectBluetoothPrinter(){
+  try{ if(btDevice?.gatt?.connected) btDevice.gatt.disconnect(); }catch(e){}
+  btDevice=null;
+  btChar=null;
+  renderBTPanel();
+}
+
+function removeAccents(str){
+  return String(str||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function escposText(o){
+  const line='--------------------------------\n';
+  const items=(o.order_items||[]).map(i=>{
+    const qty=Number(i.qty||0);
+    const total=Number(i.price||0)*qty;
+    return `${qty}x ${removeAccents(i.name)}  R$ ${total.toFixed(2)}\n`;
+  }).join('');
+  let txt='\x1B@';
+  txt+='\x1Ba\x01';
+  txt+='LA CASA DA PIZZA\n';
+  txt+='PEDIDO #'+(o.numero||'')+'\n';
+  txt+=(o.data||'')+' '+(o.hora||'')+'\n';
+  txt+='\x1Ba\x00';
+  txt+=line;
+  txt+='Cliente: '+removeAccents(o.cliente||'Nao informado')+'\n';
+  txt+='Endereco: '+removeAccents(o.endereco||'')+'\n';
+  txt+='Bairro: '+removeAccents(o.bairro||'')+'\n';
+  txt+=line;
+  txt+=items;
+  txt+=line;
+  txt+='Taxa: R$ '+Number(o.taxa||0).toFixed(2)+'\n';
+  txt+='TOTAL: R$ '+Number(o.total||0).toFixed(2)+'\n';
+  txt+='Pagamento: '+removeAccents(o.pagamento||'')+'\n';
+  if(o.obs) txt+='Obs: '+removeAccents(o.obs)+'\n';
+  txt+=line;
+  txt+='Obrigado pela preferencia!\n\n\n';
+  txt+='\x1DV\x41\x03';
+  return txt;
+}
+
+function textToBytes(str){
+  const bytes=new Uint8Array(str.length);
+  for(let i=0;i<str.length;i++) bytes[i]=str.charCodeAt(i)&0xff;
+  return bytes;
+}
+
+async function writeBT(bytes){
+  if(!btChar){
+    alert('Conecte a impressora Bluetooth primeiro.');
+    return false;
+  }
+  const chunk=512;
+  for(let i=0;i<bytes.length;i+=chunk){
+    await btChar.writeValue(bytes.slice(i,i+chunk));
+    await new Promise(r=>setTimeout(r,60));
+  }
+  return true;
+}
+
+async function printOrderBT(id){
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(!o) return;
+  try{
+    setBTStatus('Enviando pedido para impressora...','wait');
+    await writeBT(textToBytes(escposText(o)));
+    setBTStatus('Pedido enviado para a impressora.','ok');
+  }catch(e){
+    console.error(e);
+    setBTStatus('Erro ao imprimir: '+(e.message||e),'err');
+  }
+}
+
+async function testBluetoothPrint(){
+  const fake={numero:'TESTE',data:new Date().toISOString().slice(0,10),hora:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),cliente:'Teste',endereco:'Endereco teste',bairro:'Centro',taxa:0,total:10,pagamento:'PIX',order_items:[{qty:1,name:'Teste de impressao',price:10}]};
+  try{
+    setBTStatus('Enviando teste...','wait');
+    await writeBT(textToBytes(escposText(fake)));
+    setBTStatus('Teste enviado.','ok');
+  }catch(e){
+    setBTStatus('Erro no teste: '+(e.message||e),'err');
+  }
 }
 
 function printOrder(id){
