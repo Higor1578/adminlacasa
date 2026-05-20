@@ -828,92 +828,6 @@ function renderDashboard(){
     </div>`;
 }
 
-
-function getOrderRua(order){
-  if(order.rua) return order.rua;
-  const endereco=String(order.endereco||'').trim();
-  if(!endereco) return '';
-  // tenta separar "Rua X 123" ou "Rua X, 123"
-  return endereco.replace(/,\s*\d+.*$/,'').replace(/\s+\d+\s*$/,'').trim() || endereco;
-}
-
-function getOrderNumero(order){
-  if(order.numero_endereco) return order.numero_endereco;
-  if(order.numero_casa) return order.numero_casa;
-  if(order.numero_rua) return order.numero_rua;
-  if(order.numero_residencia) return order.numero_residencia;
-  if(order.numero) return ''; // numero do pedido, nao endereco
-  const endereco=String(order.endereco||'').trim();
-  const match=endereco.match(/(?:,\s*|\s+)(\d+[A-Za-z]?)\s*$/);
-  return match ? match[1] : '';
-}
-
-function getOrderComplemento(order){
-  return order.complemento || order.comp || '';
-}
-
-function getOrderReferencia(order){
-  return order.referencia || order.ponto_referencia || order.ref || '';
-}
-
-function renderEnderecoHtml(order){
-  const rua=getOrderRua(order);
-  const numero=getOrderNumero(order);
-  const bairro=order.bairro||'';
-  const complemento=getOrderComplemento(order);
-  const referencia=getOrderReferencia(order);
-
-  if(rua || numero || bairro || complemento || referencia){
-    return `
-      <div><b>Rua:</b> ${esc(rua||'Não informada')}</div>
-      <div><b>Número:</b> ${esc(numero||'Não informado')}</div>
-      <div><b>Bairro:</b> ${esc(bairro||'Não informado')}</div>
-      ${complemento?`<div><b>Complemento:</b> ${esc(complemento)}</div>`:''}
-      ${referencia?`<div><b>Referência:</b> ${esc(referencia)}</div>`:''}
-    `;
-  }
-
-  return `<div>${esc(order.endereco||'Endereço não informado')}</div>`;
-}
-
-function renderEnderecoTexto(order){
-  const rua=getOrderRua(order);
-  const numero=getOrderNumero(order);
-  const bairro=order.bairro||'';
-  const complemento=getOrderComplemento(order);
-  const referencia=getOrderReferencia(order);
-  let linhas=[];
-
-  if(rua) linhas.push('Rua: '+rua);
-  if(numero) linhas.push('Numero: '+numero);
-  if(bairro) linhas.push('Bairro: '+bairro);
-  if(complemento) linhas.push('Comp: '+complemento);
-  if(referencia) linhas.push('Ref: '+referencia);
-
-  if(!linhas.length && order.endereco) linhas.push(order.endereco);
-  return linhas.join('\\n');
-}
-
-function renderEnderecoPrintHtml(order){
-  const rua=getOrderRua(order);
-  const numero=getOrderNumero(order);
-  const bairro=order.bairro||'';
-  const complemento=getOrderComplemento(order);
-  const referencia=getOrderReferencia(order);
-
-  if(rua || numero || bairro || complemento || referencia){
-    return `
-      <p><b>Rua:</b><br>${esc(rua||'Não informada')}</p>
-      <p><b>Número:</b><br>${esc(numero||'Não informado')}</p>
-      <p><b>Bairro:</b><br>${esc(bairro||'Não informado')}</p>
-      ${complemento?`<p><b>Complemento:</b><br>${esc(complemento)}</p>`:''}
-      ${referencia?`<p><b>Referência:</b><br>${esc(referencia)}</p>`:''}
-    `;
-  }
-
-  return `<p><b>Endereço:</b><br>${esc(order.endereco||'Não informado')}</p>`;
-}
-
 function renderPedidos(){
   $('content').innerHTML=renderPrinterPanel()+`
     <div class="card">
@@ -946,7 +860,7 @@ function renderPedidosList(){
         <div class="order-meta">${esc(o.data||'')} ${esc(o.hora||'')}<br>${esc(o.cliente||'Cliente não informado')}</div>
       </div>
       <div>
-        <div class="order-meta">${renderEnderecoHtml(o)}</div>
+        <div class="order-meta">${esc(o.endereco||'')} - ${esc(o.bairro||'')}</div>
         <div class="items">${items||'Sem itens cadastrados'}</div>
         <div class="order-meta">Pagamento: ${esc(o.pagamento||'')} · Taxa: ${money(o.taxa)} · Total: <b>${money(o.total)}</b></div>
       </div>
@@ -1310,7 +1224,7 @@ function printOrder(id){
   }
 }
 
-</style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p>${renderEnderecoPrintHtml(o)}<table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
+</style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
   const w=window.open('','_blank','width=360,height=640');
   w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
 }
@@ -1570,7 +1484,7 @@ function buildEscPosOrder(order){
   out+=BOLD_ON+'CLIENTE\n'+BOLD_OFF;
   out+=wrapText(order.cliente||'Nao informado')+'\n';
   out+=BOLD_ON+'ENDERECO\n'+BOLD_OFF;
-  out+=wrapText(renderEnderecoTexto(order))+'\n';
+  out+=wrapText((order.endereco||'')+' - '+(order.bairro||''))+'\n';
   out+=LINE+'\n';
   out+=BOLD_ON+'ITENS\n'+BOLD_OFF;
   items.forEach(i=>{
