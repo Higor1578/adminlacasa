@@ -1,14 +1,9 @@
 {
   "name": "La Casa Admin",
   "short_name": "La Casa",
-  "id": "/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
   "background_color": "#100704",
   "theme_color": "#100704",
   "orientation": "portrait",
