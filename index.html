@@ -316,6 +316,28 @@ td{color:#ffe8d5}
   flex:1;
 }
 
+
+/* ===== IMPRESSORA BLUETOOTH TERMICA ===== */
+.printer-panel{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
+}
+.printer-status{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
+
 </style>
 </head>
 <body>
@@ -630,8 +652,25 @@ function renderEnderecoPrintHtml(order){
     ${referencia?`<p><b>Referência:</b><br>${esc(referencia)}</p>`:''}`;
 }
 
+
+function renderEnderecoTexto(order){
+  const rua=getOrderRua(order);
+  const numero=getOrderNumero(order);
+  const bairro=order.bairro||'';
+  const complemento=getOrderComplemento(order);
+  const referencia=getOrderReferencia(order);
+  const linhas=[];
+  if(rua) linhas.push('Rua: '+rua);
+  if(numero) linhas.push('Numero: '+numero);
+  if(bairro) linhas.push('Bairro: '+bairro);
+  if(complemento) linhas.push('Comp: '+complemento);
+  if(referencia) linhas.push('Ref: '+referencia);
+  if(!linhas.length && order.endereco) linhas.push(order.endereco);
+  return linhas.join('\n');
+}
+
 function renderPedidos(){
-  $('content').innerHTML=`
+  $('content').innerHTML=renderPrinterPanel()+`
     <div class="card">
       <div class="section-title">
         <h2>Pedidos</h2>
@@ -673,7 +712,8 @@ function renderPedidosList(){
           ${['novo','preparando','entregue','cancelado'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
         </select>
         <div style="height:8px"></div>
-        <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Imprimir</button>
+        <button class="btn small blue" onclick="printOrderBT('${esc(o.id)}')">BT</button>
+        <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Navegador</button>
       </div>
     </div>`;
   }).join(''):'<div class="notice">Nenhum pedido encontrado.</div>';
@@ -765,6 +805,28 @@ function printOrder(id){
 .alert-controls button{
   flex:1;
 }
+
+
+/* ===== IMPRESSORA BLUETOOTH TERMICA ===== */
+.printer-panel{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
+}
+.printer-status{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
 
 </style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(formatDateBRFromOrder(o))} ${esc(formatTimeBRFromOrder(o))}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p>${renderEnderecoPrintHtml(o)}<table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
   const w=window.open('','_blank','width=360,height=640');
@@ -904,6 +966,251 @@ async function saveClosedDays(){
   await saveSettings();
 }
 
+
+
+// ===== IMPRESSORA TERMICA BLUETOOTH ESC/POS 58mm/80mm =====
+const PRINT_SERVICE_CANDIDATES=[
+  '000018f0-0000-1000-8000-00805f9b34fb',
+  '0000ffe0-0000-1000-8000-00805f9b34fb',
+  'e7810a71-73ae-499d-8c15-faa9aef0c3f2'
+];
+const PRINT_CHAR_CANDIDATES=[
+  '00002af1-0000-1000-8000-00805f9b34fb',
+  '0000ffe1-0000-1000-8000-00805f9b34fb',
+  'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f'
+];
+
+let btDevice=null;
+let btChar=null;
+let printerWidth=Number(localStorage.getItem('printer_width')||58);
+
+function setPrinterStatus(msg,type='wait'){
+  const el=document.getElementById('printerStatus');
+  if(!el)return;
+  el.textContent=msg;
+  el.className='printer-status '+type;
+}
+
+function renderPrinterPanel(){
+  return `
+    <div class="printer-panel">
+      <button class="btn blue" onclick="connectThermalPrinter()">Conectar impressora Bluetooth</button>
+      <button class="btn secondary" onclick="disconnectThermalPrinter()">Desconectar</button>
+      <button class="btn secondary" onclick="testThermalPrinter()">Teste BT</button>
+      <select class="select" style="width:auto" onchange="setPrinterWidth(this.value)">
+        <option value="58" ${printerWidth===58?'selected':''}>Bobina 58mm</option>
+        <option value="80" ${printerWidth===80?'selected':''}>Bobina 80mm</option>
+      </select>
+      <div id="printerStatus" class="printer-status">Use Chrome/Edge no Android ou Windows. Primeiro pareie a impressora no Bluetooth do aparelho.</div>
+    </div>`;
+}
+
+function setPrinterWidth(value){
+  printerWidth=Number(value)||58;
+  localStorage.setItem('printer_width',String(printerWidth));
+  setPrinterStatus('Bobina '+printerWidth+'mm selecionada.','ok');
+}
+
+function lineWidth(){
+  return printerWidth===80?48:32;
+}
+
+function textToBytes(text){
+  const clean=String(text)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[–—]/g,'-')
+    .replace(/[“”]/g,'"')
+    .replace(/[‘’]/g,"'");
+  const bytes=new Uint8Array(clean.length);
+  for(let i=0;i<clean.length;i++) bytes[i]=clean.charCodeAt(i)&0xff;
+  return bytes;
+}
+
+function fitLeftRight(left,right){
+  const w=lineWidth();
+  left=String(left||'');
+  right=String(right||'');
+  const maxLeft=Math.max(1,w-right.length-1);
+  if(left.length>maxLeft) left=left.slice(0,maxLeft-1)+'.';
+  return left+' '.repeat(Math.max(1,w-left.length-right.length))+right;
+}
+
+function wrapText(text,indent=''){
+  const w=lineWidth()-indent.length;
+  const words=String(text||'').split(/\s+/);
+  const lines=[];
+  let line='';
+  words.forEach(word=>{
+    if((line+' '+word).trim().length>w){
+      if(line) lines.push(indent+line);
+      line=word;
+    }else{
+      line=(line+' '+word).trim();
+    }
+  });
+  if(line) lines.push(indent+line);
+  return lines.join('\n');
+}
+
+function moneyPlain(v){
+  return 'R$ '+Number(v||0).toFixed(2).replace('.',',');
+}
+
+function buildEscPosOrder(order){
+  const ESC='\x1b';
+  const GS='\x1d';
+  const INIT=ESC+'@';
+  const BOLD_ON=ESC+'E\x01';
+  const BOLD_OFF=ESC+'E\x00';
+  const CENTER=ESC+'a\x01';
+  const LEFT=ESC+'a\x00';
+  const NORMAL=GS+'!\x00';
+  const TALL=GS+'!\x01';
+  const DOUBLE=GS+'!\x11';
+  const CUT=GS+'V\x41\x03';
+  const LINE='-'.repeat(lineWidth());
+  const items=order.order_items||[];
+
+  let out='';
+  out+=INIT;
+  out+=CENTER+BOLD_ON+DOUBLE+'LA CASA\n'+NORMAL;
+  out+=CENTER+BOLD_ON+DOUBLE+'DA PIZZA\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+LINE+'\n';
+  out+=CENTER+BOLD_ON+DOUBLE+'#'+(order.numero||String(order.id).slice(0,8))+'\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+formatDateBRFromOrder(order)+'  '+formatTimeBRFromOrder(order)+'\n';
+  out+='\n'+LEFT+BOLD_ON+TALL+'CLIENTE\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(order.cliente||'Nao informado')+'\n\n';
+  out+=BOLD_ON+TALL+'ENDERECO\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(renderEnderecoTexto(order))+'\n\n\n';
+  out+=LINE+'\n';
+  out+=CENTER+BOLD_ON+TALL+'ITENS DO PEDIDO\n'+NORMAL+BOLD_OFF;
+  out+=LINE+'\n';
+
+  items.forEach((i,idx)=>{
+    const qty=Number(i.qty||0);
+    const price=Number(i.price||0);
+    out+=BOLD_ON+TALL+(idx+1)+') '+qty+'x\n'+NORMAL+BOLD_OFF;
+    out+=BOLD_ON+wrapText(i.name||'Item')+'\n'+BOLD_OFF;
+    out+=fitLeftRight('Unit: '+moneyPlain(price),moneyPlain(qty*price))+'\n\n\n';
+  });
+
+  out+=LINE+'\n';
+  out+=BOLD_ON+TALL+fitLeftRight('Taxa',moneyPlain(order.taxa))+'\n'+NORMAL+BOLD_OFF;
+  out+=BOLD_ON+DOUBLE+fitLeftRight('TOTAL',moneyPlain(order.total))+'\n'+NORMAL+BOLD_OFF;
+  out+=LINE+'\n\n';
+  out+=BOLD_ON+TALL+'PAGAMENTO\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(order.pagamento||'Nao informado')+'\n';
+  if(order.troco) out+='Troco: '+order.troco+'\n';
+  if(order.obs) out+='\n'+BOLD_ON+'OBS\n'+BOLD_OFF+wrapText(order.obs)+'\n';
+  out+='\n'+LINE+'\n';
+  out+=CENTER+BOLD_ON+'OBRIGADO!\n'+BOLD_OFF;
+  out+=CENTER+'Volte sempre\n';
+  out+=LINE+'\n';
+  out+='\n\n\n\n\n\n\n';
+  out+=CUT;
+  return textToBytes(out);
+}
+
+async function findWritableCharacteristic(server){
+  for(const serviceUuid of PRINT_SERVICE_CANDIDATES){
+    try{
+      const service=await server.getPrimaryService(serviceUuid);
+      for(const charUuid of PRINT_CHAR_CANDIDATES){
+        try{
+          return await service.getCharacteristic(charUuid);
+        }catch(e){}
+      }
+      const chars=await service.getCharacteristics();
+      const writable=chars.find(c=>c.properties.write||c.properties.writeWithoutResponse);
+      if(writable) return writable;
+    }catch(e){}
+  }
+  throw new Error('Não achei o serviço de impressão. Tente parear a impressora no Bluetooth do sistema e conectar de novo.');
+}
+
+async function connectThermalPrinter(){
+  if(!navigator.bluetooth){
+    setPrinterStatus('Web Bluetooth não suportado. Use Chrome/Edge no Android ou Windows.','err');
+    return;
+  }
+  try{
+    setPrinterStatus('Abrindo lista de dispositivos...','wait');
+    btDevice=await navigator.bluetooth.requestDevice({
+      acceptAllDevices:true,
+      optionalServices:PRINT_SERVICE_CANDIDATES
+    });
+    setPrinterStatus('Conectando em '+(btDevice.name||'impressora')+'...','wait');
+    const server=await btDevice.gatt.connect();
+    btChar=await findWritableCharacteristic(server);
+    btDevice.addEventListener('gattserverdisconnected',()=>{
+      btChar=null;
+      setPrinterStatus('Impressora desconectada.','err');
+    });
+    setPrinterStatus('Conectada: '+(btDevice.name||'impressora térmica')+'. Agora use o botão BT no pedido.','ok');
+  }catch(e){
+    btChar=null;
+    setPrinterStatus('Erro ao conectar: '+(e.message||e),'err');
+  }
+}
+
+function disconnectThermalPrinter(){
+  try{if(btDevice?.gatt?.connected)btDevice.gatt.disconnect();}catch(e){}
+  btDevice=null;
+  btChar=null;
+  setPrinterStatus('Desconectada.','wait');
+}
+
+async function writePrinterBytes(bytes){
+  if(!btChar) throw new Error('Impressora não conectada.');
+  const chunk=160;
+  for(let i=0;i<bytes.length;i+=chunk){
+    const part=bytes.slice(i,i+chunk);
+    if(btChar.properties.writeWithoutResponse && btChar.writeValueWithoutResponse){
+      await btChar.writeValueWithoutResponse(part);
+    }else{
+      await btChar.writeValue(part);
+    }
+    await new Promise(r=>setTimeout(r,80));
+  }
+}
+
+async function printOrderBT(id){
+  const order=orders.find(x=>String(x.id)===String(id));
+  if(!order) return;
+  try{
+    setPrinterStatus('Imprimindo pedido #'+(order.numero||'')+'...','wait');
+    await writePrinterBytes(buildEscPosOrder(order));
+    setPrinterStatus('Pedido impresso com sucesso.','ok');
+  }catch(e){
+    setPrinterStatus('Erro ao imprimir: '+(e.message||e),'err');
+  }
+}
+
+async function testThermalPrinter(){
+  const fake={
+    id:'teste',
+    numero:'TESTE',
+    cliente:'Cliente Teste',
+    rua:'Rua Teste',
+    numero_endereco:'123',
+    bairro:'Centro',
+    complemento:'Casa',
+    referencia:'Perto da praça',
+    data:new Date().toISOString().slice(0,10),
+    hora:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    pagamento:'pix',
+    taxa:5,
+    total:53,
+    order_items:[{qty:1,name:'Pizza Calabresa Grande',price:48}]
+  };
+  try{
+    setPrinterStatus('Enviando teste...','wait');
+    await writePrinterBytes(buildEscPosOrder(fake));
+    setPrinterStatus('Teste enviado com sucesso.','ok');
+  }catch(e){
+    setPrinterStatus('Erro no teste: '+(e.message||e),'err');
+  }
+}
 
 // ===== INSTALACAO PWA =====
 let deferredInstallPrompt=null;
