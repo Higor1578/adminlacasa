@@ -475,6 +475,107 @@ td{color:#ffe8d5}
   }
 }
 
+
+/* ===== CORRECAO MOBILE: PIZZAS, BEBIDAS E BAIRROS SEM CORTAR LATERAL ===== */
+@media(max-width:850px){
+  html,body{
+    max-width:100%;
+    overflow-x:hidden!important;
+  }
+  .main,.card,.table-wrap{
+    max-width:100%!important;
+    overflow-x:hidden!important;
+  }
+  .table-wrap{
+    overflow:visible!important;
+  }
+  table{
+    min-width:0!important;
+    width:100%!important;
+    display:block!important;
+  }
+  thead{
+    display:none!important;
+  }
+  tbody{
+    display:block!important;
+    width:100%!important;
+  }
+  tr{
+    display:block!important;
+    width:100%!important;
+    background:#160904;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  td{
+    display:block!important;
+    width:100%!important;
+    border-bottom:none!important;
+    padding:6px 0!important;
+    font-size:13px!important;
+  }
+  td .input{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  td:nth-child(1)::before{
+    content:"Nome";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  td:nth-child(2)::before{
+    content:"Preço / Taxa";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  td:nth-child(3)::before{
+    content:"Ativo";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  td:nth-child(4)::before{
+    content:"Ações";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  td .row{
+    display:grid!important;
+    grid-template-columns:1fr 1fr;
+    gap:8px!important;
+    width:100%;
+  }
+  td .row .btn{
+    width:100%;
+    min-width:0;
+  }
+  .section-title{
+    flex-direction:column;
+    align-items:flex-start!important;
+  }
+  .form-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -652,24 +753,77 @@ function render(){
   if(current==='funcionamento') return renderFuncionamento();
 }
 
+function normalizePaymentType(value){
+  const p=String(value||'').toLowerCase();
+  if(p.includes('pix')) return 'pix';
+  if(p.includes('cart')) return 'cartao';
+  if(p.includes('dinheiro')) return 'dinheiro';
+  return 'outros';
+}
+
+function normalizePaymentType(value){
+  const p=String(value||'').toLowerCase();
+  if(p.includes('pix')) return 'pix';
+  if(p.includes('cart')) return 'cartao';
+  if(p.includes('dinheiro')) return 'dinheiro';
+  return 'outros';
+}
+
 function renderDashboard(){
-  const hoje=orders.filter(o=>o.data===today());
+  const pedidosValidos=orders.filter(o=>o.status!=='cancelado');
+  const hoje=pedidosValidos.filter(o=>o.data===today());
+
   const faturamentoHoje=hoje.reduce((s,o)=>s+Number(o.total||0),0);
+  const faturamentoGeral=pedidosValidos.reduce((s,o)=>s+Number(o.total||0),0);
+
+  const pix=pedidosValidos.filter(o=>normalizePaymentType(o.pagamento)==='pix').reduce((s,o)=>s+Number(o.total||0),0);
+  const dinheiro=pedidosValidos.filter(o=>normalizePaymentType(o.pagamento)==='dinheiro').reduce((s,o)=>s+Number(o.total||0),0);
+  const cartao=pedidosValidos.filter(o=>normalizePaymentType(o.pagamento)==='cartao').reduce((s,o)=>s+Number(o.total||0),0);
+  const outros=pedidosValidos.filter(o=>normalizePaymentType(o.pagamento)==='outros').reduce((s,o)=>s+Number(o.total||0),0);
+
   const novos=orders.filter(o=>o.status==='novo').length;
   const entreguesHoje=hoje.filter(o=>o.status==='entregue').length;
-  const ticket=hoje.length?faturamentoHoje/hoje.length:0;
+  const ticket=pedidosValidos.length?faturamentoGeral/pedidosValidos.length:0;
+  const ticketHoje=hoje.length?faturamentoHoje/hoje.length:0;
+
   const top={};
-  orders.forEach(o=>(o.order_items||[]).forEach(i=>{top[i.name]=(top[i.name]||0)+Number(i.qty||0)}));
+  pedidosValidos.forEach(o=>(o.order_items||[]).forEach(i=>{
+    top[i.name]=(top[i.name]||0)+Number(i.qty||0);
+  }));
   const topList=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,6);
+
   $('content').innerHTML=`
     <div class="grid">
-      <div class="card"><div class="stat-label">Pedidos hoje</div><div class="stat-value">${hoje.length}</div></div>
+      <div class="card"><div class="stat-label">Pedidos válidos</div><div class="stat-value">${pedidosValidos.length}</div></div>
+      <div class="card"><div class="stat-label">Faturamento geral</div><div class="stat-value">${money(faturamentoGeral)}</div></div>
       <div class="card"><div class="stat-label">Faturamento hoje</div><div class="stat-value">${money(faturamentoHoje)}</div></div>
-      <div class="card"><div class="stat-label">Pedidos novos</div><div class="stat-value">${novos}</div></div>
-      <div class="card"><div class="stat-label">Ticket médio</div><div class="stat-value">${money(ticket)}</div></div>
+      <div class="card"><div class="stat-label">Ticket médio geral</div><div class="stat-value">${money(ticket)}</div></div>
     </div>
+
+    <div class="grid">
+      <div class="card"><div class="stat-label">PIX</div><div class="stat-value">${money(pix)}</div></div>
+      <div class="card"><div class="stat-label">Dinheiro</div><div class="stat-value">${money(dinheiro)}</div></div>
+      <div class="card"><div class="stat-label">Cartão</div><div class="stat-value">${money(cartao)}</div></div>
+      <div class="card"><div class="stat-label">Outros</div><div class="stat-value">${money(outros)}</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="stat-label">Pedidos hoje</div><div class="stat-value">${hoje.length}</div></div>
+      <div class="card"><div class="stat-label">Pedidos novos</div><div class="stat-value">${novos}</div></div>
+      <div class="card"><div class="stat-label">Entregues hoje</div><div class="stat-value">${entreguesHoje}</div></div>
+      <div class="card"><div class="stat-label">Ticket médio hoje</div><div class="stat-value">${money(ticketHoje)}</div></div>
+    </div>
+
     <div class="card">
-      <div class="section-title"><h2>Mais vendidos</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div>
+      <div class="section-title"><h2>Resumo por pagamento</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div>
+      <div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>PIX</span><strong>${money(pix)}</strong></div>
+      <div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>Dinheiro</span><strong>${money(dinheiro)}</strong></div>
+      <div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>Cartão</span><strong>${money(cartao)}</strong></div>
+      <div class="row" style="justify-content:space-between;padding:10px 0"><span>Total válido</span><strong>${money(faturamentoGeral)}</strong></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="section-title"><h2>Mais vendidos</h2></div>
       ${topList.length?topList.map(([name,qty])=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>${esc(name)}</span><strong>${qty}x</strong></div>`).join(''):'<div class="notice">Ainda não há itens vendidos.</div>'}
     </div>`;
 }
@@ -966,6 +1120,107 @@ function printOrder(id){
   .tabs-mobile button{
     min-width:76px!important;
     font-size:10.5px!important;
+  }
+}
+
+
+/* ===== CORRECAO MOBILE: PIZZAS, BEBIDAS E BAIRROS SEM CORTAR LATERAL ===== */
+@media(max-width:850px){
+  html,body{
+    max-width:100%;
+    overflow-x:hidden!important;
+  }
+  .main,.card,.table-wrap{
+    max-width:100%!important;
+    overflow-x:hidden!important;
+  }
+  .table-wrap{
+    overflow:visible!important;
+  }
+  table{
+    min-width:0!important;
+    width:100%!important;
+    display:block!important;
+  }
+  thead{
+    display:none!important;
+  }
+  tbody{
+    display:block!important;
+    width:100%!important;
+  }
+  tr{
+    display:block!important;
+    width:100%!important;
+    background:#160904;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  td{
+    display:block!important;
+    width:100%!important;
+    border-bottom:none!important;
+    padding:6px 0!important;
+    font-size:13px!important;
+  }
+  td .input{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  td:nth-child(1)::before{
+    content:"Nome";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  td:nth-child(2)::before{
+    content:"Preço / Taxa";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  td:nth-child(3)::before{
+    content:"Ativo";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  td:nth-child(4)::before{
+    content:"Ações";
+    display:block;
+    color:var(--brand2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  td .row{
+    display:grid!important;
+    grid-template-columns:1fr 1fr;
+    gap:8px!important;
+    width:100%;
+  }
+  td .row .btn{
+    width:100%;
+    min-width:0;
+  }
+  .section-title{
+    flex-direction:column;
+    align-items:flex-start!important;
+  }
+  .form-grid{
+    grid-template-columns:1fr!important;
   }
 }
 
