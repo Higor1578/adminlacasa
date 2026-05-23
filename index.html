@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 :root{
   --bg:#100704;
@@ -389,13 +390,50 @@ td{color:#ffe8d5}
 .printer-status.err{color:var(--red)}
 .printer-status.wait{color:var(--yellow)}
 
+
+
+/* ===== ICONES FONT AWESOME ===== */
+.logo-icon i{
+  font-size:22px;
+  color:#160801;
+}
+.nav i,
+button i,
+h1 i,
+h2 i,
+strong i{
+  margin-right:6px;
+}
+.tabs-mobile i{
+  display:block;
+  margin-right:0;
+  margin-bottom:4px;
+  font-size:17px;
+}
+.nav button{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+button i{pointer-events:none}
+.install-fab{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 </style>
 </head>
 <body>
 
 
 <div id="orderAlert" class="order-alert">
-  <strong>🔔 Novo pedido chegou!</strong>
+  <strong><i class="fa-solid fa-bell"></i> Novo pedido chegou!</strong>
   <div id="orderAlertText">Verifique a aba Pedidos.</div>
   <div class="alert-controls">
     <button class="btn small" onclick="go('pedidos');hideOrderAlert()">Ver pedido</button>
@@ -405,7 +443,7 @@ td{color:#ffe8d5}
 
 <section id="loginScreen" class="login">
   <form class="login-box" onsubmit="login(event)">
-    <h1>🍕 La Casa Admin</h1>
+    <h1><i class="fa-solid fa-pizza-slice"></i> La Casa Admin</h1>
     <p>Painel novo para acompanhar pedidos, dashboard, produtos, bairros, bebidas e funcionamento.</p>
     <div class="field">
       <label>Email</label>
@@ -423,7 +461,7 @@ td{color:#ffe8d5}
 <section id="app" class="app hidden">
   <aside class="sidebar">
     <div class="logo">
-      <div class="logo-icon">🍕</div>
+      <div class="logo-icon"><i class="fa-solid fa-pizza-slice"></i></div>
       <div><h2>La Casa</h2><span>Painel administrativo</span></div>
     </div>
     <nav class="nav" id="sideNav"></nav>
@@ -449,7 +487,7 @@ td{color:#ffe8d5}
 </section>
 
 
-<button id="installBtn" class="install-fab" onclick="installApp()">📲 Instalar</button>
+<button id="installBtn" class="install-fab" onclick="installApp()"><i class="fa-solid fa-mobile-screen"></i> Instalar</button>
 <div id="installCard" class="install-card">
   <strong>Instalar o painel no aparelho</strong><br>
   <span id="installText">Android: toque em Instalar. iPhone: Compartilhar → Adicionar à Tela de Início.</span>
@@ -478,15 +516,19 @@ const ADMIN_SESSION_MAX_MS=24*60*60*1000;
 const pages=[
   ['pedidos','Pedidos','Pedidos recebidos pelo site'],
   ['dashboard','Dashboard','Resumo geral'],
-  ['produtos','🍕 Produtos','Preços e produtos'],
-  ['bebidas','🥤 Bebidas','Cadastro de bebidas'],
-  ['bairros','🛵 Bairros','Taxas de entrega'],
-  ['funcionamento','🕒 Funcionamento','Abrir, fechar e dias de folga']
+  ['produtos','<i class="fa-solid fa-pizza-slice"></i> Produtos','Preços e produtos'],
+  ['bebidas','<i class="fa-solid fa-glass-water"></i> Bebidas','Cadastro de bebidas'],
+  ['bairros','<i class="fa-solid fa-motorcycle"></i> Bairros','Taxas de entrega'],
+  ['funcionamento','<i class="fa-solid fa-clock"></i> Funcionamento','Abrir, fechar e dias de folga']
 ];
 
 const $=id=>document.getElementById(id);
 const money=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const stripHtml=s=>String(s??'')
+  .replace(/<[^>]*>/g,'')
+  .replace(/[^\wÀ-ÿ\s]/g,'')
+  .trim();
 
 const TZ_BR='America/Sao_Paulo';
 function dateKeyBR(date=new Date()){
@@ -575,12 +617,12 @@ async function requireFreshLogin(message){
 function renderNav(){
   const html=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
   const mobileLabels={
-    dashboard:'📊<br>Dash',
-    pedidos:'📦<br>Pedidos',
-    produtos:'🍕<br>Pizza',
-    bebidas:'🥤<br>Bebidas',
-    bairros:'🛵<br>Bairros',
-    funcionamento:'🕒<br>Loja'
+    dashboard:'<i class="fa-solid fa-chart-line"></i><br>Dash',
+    pedidos:'<i class="fa-solid fa-box"></i><br>Pedidos',
+    produtos:'<i class="fa-solid fa-pizza-slice"></i><br>Pizza',
+    bebidas:'<i class="fa-solid fa-glass-water"></i><br>Bebidas',
+    bairros:'<i class="fa-solid fa-motorcycle"></i><br>Bairros',
+    funcionamento:'<i class="fa-solid fa-clock"></i><br>Loja'
   };
   const mobileHtml=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${mobileLabels[p[0]]||p[1]}</button>`).join('');
   $('sideNav').innerHTML=html;
@@ -590,7 +632,7 @@ function renderNav(){
 function go(page){
   current=page;
   const p=pages.find(x=>x[0]===page)||pages[0];
-  $('pageTitle').textContent=p[1].replace(/[^\wÀ-ÿ\s]/g,'').trim();
+  $('pageTitle').textContent=stripHtml(p[1]);
   $('pageSubtitle').textContent=p[2];
   renderNav();
   render();
@@ -1716,7 +1758,6 @@ init();
 </script>
 </body>
 </html>
-
 
 
 
