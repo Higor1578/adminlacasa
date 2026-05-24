@@ -1,1350 +1,1292 @@
-
-Essa mensagem significa que você atingiu o limite de uso da ferramenta/modelo que estava usando naquele momento — normalmente no ChatGPT ou no Codex integrado ao VS Code.
-
-Ela está dizendo basicamente 3 coisas:
-
-“You’ve hit your usage limit”
-→ você gastou a quantidade de uso disponível no seu plano atual.
-
-“Upgrade to Pro”
-→ o plano atual não tem mais créditos suficientes para continuar usando aquele recurso pesado (geralmente GPT-5, Codex, agentes, geração longa, etc.).
-
-“try again at 11:01 PM”
-→ seu limite reseta nesse horário e você poderá usar novamente sem pagar extra.
-
-O trecho “purchase more credits” indica que alguns recursos agora usam créditos separados, principalmente:
-
-Codex
-
-tarefas de programação mais pesadas
-
-agentes/automações
-
-modelos premium
-
-Se você estiver usando no VS Code com Continue, Cline ou Codex, isso costuma acontecer quando:
-
-usa GPT-5 muitas vezes seguidas
-
-manda arquivos grandes
-
-pede alterações longas no código
-
-deixa o agente trabalhando sozinho
-
-Você pode:
-
-esperar o horário resetar
-
-trocar para um modelo mais leve (GPT-4.1 mini, GPT-4o mini etc.)
-
-diminuir contexto/arquivos enviados
-
-assinar o plano Pro
-
-Pra ver exatamente qual limite acabou:
-Página de uso do Codex/OpenAI
-
-E os planos:
-Planos ChatGPT Pro
-
-
-tem como criar agente para colocar no vs code e usar vc no lugar do codex?
-
-Pensou por 5s
-Sim, tem como usar “eu” no VS Code, mas não pelo seu ChatGPT Plus direto. Você precisa usar uma API Key da OpenAI em uma extensão tipo Continue ou Cline.
-
-O mais simples é o Continue:
-
-Instale no VS Code:
-Continue - open-source AI code assistant
-
-Abra o Continue e vá em:
-Config / config.yaml
-
-Coloque algo assim:
-
-name: Meu Assistente
-version: 1.0.0
-schema: v1
-
-models:
-  - name: GPT-5
-    provider: openai
-    model: gpt-5
-    apiKey: SUA_API_KEY_AQUI
-Salve e reinicie o VS Code.
-
-Aí você consegue pedir para ele:
-“altere esse arquivo”
-“corrija esse erro”
-“crie esse sistema”
-“explique esse código”
-
-Mas atenção: isso não usa seu limite do ChatGPT Plus, usa créditos da API da OpenAI, que são pagos separado. O próprio OpenAI diz que quando o Codex atinge limite, alguns usuários precisam esperar resetar, comprar créditos ou fazer upgrade. 
-
-Minha sugestão: para você, use Continue + OpenAI API ou Continue + Ollama local.
-Com API fica melhor, com Ollama fica grátis, mas seu PC precisa aguentar.
-
-
-
-Texto colado(5).txt
-Documento
-tem como trocar os emojis por icones?
-
-Sim. Fica até mais profissional e mais bonito no painel.
-No seu código você está usando muito emoji tipo:
-
-🍕
-🥤
-🛵
-🕒
-📦
-📊
-🔔
-📲
-O ideal é trocar por uma biblioteca de ícones, tipo:
-
-Lucide Icons
-
-Font Awesome
-
-Bootstrap Icons
-
-Para seu projeto eu recomendaria Lucide ou Font Awesome.
-
-No seu arquivo 
-
- você pode fazer assim:
-
-Adicione isso no <head>:
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-Depois troque:
-
-🍕 La Casa Admin
-por:
-
-<i class="fa-solid fa-pizza-slice"></i> La Casa Admin
-Troque também:
-
-📦 Pedidos
-por:
-
-<i class="fa-solid fa-box"></i> Pedidos
-E:
-
-🔔 Novo pedido chegou!
-por:
-
-<i class="fa-solid fa-bell"></i> Novo pedido chegou!
-Os equivalentes mais bonitos para seu sistema seriam:
-
-Emoji	Ícone
-🍕	fa-pizza-slice
-🥤	fa-glass-water
-🛵	fa-motorcycle
-🕒	fa-clock
-📦	fa-box
-📊	fa-chart-line
-🔔	fa-bell
-📲	fa-mobile-screen
-Exemplo no menu:
-
-<button>
-  <i class="fa-solid fa-box"></i>
-  Pedidos
-</button>
-E pode estilizar:
-
-button i{
-  margin-right:8px;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Admin La Casa da Pizza</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#100704">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="La Casa Admin">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{
+  --bg:#100704;
+  --panel:#1c0d08;
+  --panel2:#27120b;
+  --line:#3b1b10;
+  --text:#fff4e8;
+  --muted:#c99f7c;
+  --brand:#ff6b35;
+  --brand2:#ffb45c;
+  --green:#2ecc71;
+  --blue:#3498db;
+  --red:#e74c3c;
+  --yellow:#f39c12;
 }
-Fica mais leve, moderno e consistente no Android/iPhone. Emojis variam muito de aparelho; ícones ficam iguais em todos.
-
-
-
-Texto colado(6).txt
-Documento
-olha esse supabase e ver se esta seguro?
-
-
-Texto colado(7).txt
-Documento
-
-Texto colado (2).txt
-Documento
-corrija as escritas algumas palavras estao erradas e estranhas palavras 
-
--- =====================================================
--- SAAS DELIVERY MULTILOJAS - BANCO SEGURO SUPABASE
--- PIZZARIA • ÁGUA • ADEGA • AÇAÍ • HAMBURGUERIA
--- =====================================================
-
--- IMPORTANTE:
--- Rode este SQL no Supabase SQL Editor.
--- Depois crie os usuários manualmente em Authentication > Users.
--- Não deixe cadastro público ligado.
-
--- =====================================================
--- EXTENSÕES
--- =====================================================
-
-create extension if not exists pgcrypto;
-
--- =====================================================
--- TIPOS
--- =====================================================
-
-create type public.store_type as enum (
-  'pizzaria',
-  'agua',
-  'adega',
-  'hamburgueria',
-  'acai',
-  'marmitaria',
-  'outros'
-);
-
-create type public.user_role as enum (
-  'owner',
-  'admin',
-  'atendente'
-);
-
-create type public.order_status as enum (
-  'novo',
-  'aceito',
-  'preparando',
-  'saiu_entrega',
-  'concluido',
-  'cancelado'
-);
-
-create type public.payment_method as enum (
-  'dinheiro',
-  'pix',
-  'cartao',
-  'outro'
-);
-
--- =====================================================
--- LOJAS
--- =====================================================
-
-create table public.stores (
-  id uuid primary key default gen_random_uuid(),
-
-  name text not null,
-  slug text not null unique,
-
-  store_type public.store_type not null default 'pizzaria',
-
-  logo_url text,
-  banner_url text,
-
-  phone text,
-  whatsapp text,
-
-  address text,
-  city text,
-  state text,
-
-  primary_color text default '#ff6b35',
-
-  active boolean not null default true,
-
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- =====================================================
--- USUÁRIOS DAS LOJAS
--- =====================================================
-
-create table public.store_users (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-  user_id uuid not null references auth.users(id) on delete cascade,
-
-  role public.user_role not null default 'admin',
-
-  active boolean not null default true,
-
-  created_at timestamptz not null default now(),
-
-  unique(store_id, user_id)
-);
-
--- =====================================================
--- CATEGORIAS
--- =====================================================
-
-create table public.categories (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-
-  name text not null,
-  sort_order int not null default 0,
-
-  active boolean not null default true,
-
-  created_at timestamptz not null default now()
-);
-
--- =====================================================
--- PRODUTOS
--- =====================================================
-
-create table public.products (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-  category_id uuid references public.categories(id) on delete set null,
-
-  name text not null,
-  description text,
-  image_url text,
-
-  price numeric(10,2) not null default 0,
-  promotional_price numeric(10,2),
-
-  stock int,
-  track_stock boolean not null default false,
-
-  active boolean not null default true,
-
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- =====================================================
--- BAIRROS / TAXAS
--- =====================================================
-
-create table public.neighborhoods (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-
-  name text not null,
-  delivery_fee numeric(10,2) not null default 0,
-
-  active boolean not null default true,
-
-  created_at timestamptz not null default now(),
-
-  unique(store_id, name)
-);
-
--- =====================================================
--- CONFIGURAÇÕES DA LOJA
--- =====================================================
-
-create table public.store_settings (
-  store_id uuid primary key references public.stores(id) on delete cascade,
-
-  manual_closed boolean not null default false,
-  closed_days int[] not null default '{}',
-
-  use_hours boolean not null default true,
-  open_time text not null default '08:00',
-  close_time text not null default '23:00',
-
-  minimum_order numeric(10,2) not null default 0,
-  delivery_time text default '30-50 min',
-
-  pix_key text,
-  instagram text,
-  facebook text,
-
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- =====================================================
--- PEDIDOS
--- =====================================================
-
-create table public.orders (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-
-  order_number bigserial,
-
-  customer_name text not null,
-  customer_phone text not null,
-
-  street text not null,
-  number text not null,
-  complement text,
-  neighborhood text not null,
-  reference_point text,
-
-  payment_method public.payment_method,
-  change_for numeric(10,2),
-
-  delivery_fee numeric(10,2) not null default 0,
-  subtotal numeric(10,2) not null default 0,
-  total numeric(10,2) not null default 0,
-
-  status public.order_status not null default 'novo',
-
-  notes text,
-
-  public_token uuid not null default gen_random_uuid(),
-
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- =====================================================
--- ITENS DO PEDIDO
--- =====================================================
-
-create table public.order_items (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-  order_id uuid not null references public.orders(id) on delete cascade,
-
-  product_id uuid references public.products(id) on delete set null,
-
-  product_name text not null,
-  quantity int not null default 1,
-
-  unit_price numeric(10,2) not null default 0,
-  total_price numeric(10,2) not null default 0,
-
-  observation text,
-
-  created_at timestamptz not null default now()
-);
-
--- =====================================================
--- CUPONS
--- =====================================================
-
-create table public.coupons (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-
-  code text not null,
-  discount_type text not null default 'fixed',
-  discount_value numeric(10,2) not null default 0,
-
-  active boolean not null default true,
-  expires_at timestamptz,
-
-  created_at timestamptz not null default now(),
-
-  unique(store_id, code)
-);
-
--- =====================================================
--- NOTIFICAÇÕES
--- =====================================================
-
-create table public.notifications (
-  id uuid primary key default gen_random_uuid(),
-
-  store_id uuid not null references public.stores(id) on delete cascade,
-
-  title text not null,
-  message text,
-  read boolean not null default false,
-
-  created_at timestamptz not null default now()
-);
-
--- =====================================================
--- FUNÇÃO: VERIFICAR SE O USUÁRIO É ADMIN DA LOJA
--- =====================================================
-
-create or replace function public.is_store_admin(target_store_id uuid)
-returns boolean
-language sql
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1
-    from public.store_users su
-    where su.store_id = target_store_id
-      and su.user_id = auth.uid()
-      and su.active = true
-      and su.role in ('owner','admin','atendente')
-  );
-$$;
-
--- =====================================================
--- FUNÇÃO: VERIFICAR SE O USUÁRIO É DONO/ADMIN
--- =====================================================
-
-create or replace function public.is_store_manager(target_store_id uuid)
-returns boolean
-language sql
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1
-    from public.store_users su
-    where su.store_id = target_store_id
-      and su.user_id = auth.uid()
-      and su.active = true
-      and su.role in ('owner','admin')
-  );
-$$;
-
--- =====================================================
--- ATIVAR RLS
--- =====================================================
-
-alter table public.stores enable row level security;
-alter table public.store_users enable row level security;
-alter table public.categories enable row level security;
-alter table public.products enable row level security;
-alter table public.neighborhoods enable row level security;
-alter table public.store_settings enable row level security;
-alter table public.orders enable row level security;
-alter table public.order_items enable row level security;
-alter table public.coupons enable row level security;
-alter table public.notifications enable row level security;
-
--- =====================================================
--- REMOVER POLICIES ANTIGAS
--- =====================================================
-
-drop policy if exists "public_select_active_stores" on public.stores;
-drop policy if exists "admin_manage_stores" on public.stores;
-
-drop policy if exists "store_users_select_own_store" on public.store_users;
-drop policy if exists "store_users_owner_manage" on public.store_users;
-
-drop policy if exists "public_select_categories" on public.categories;
-drop policy if exists "admin_manage_categories" on public.categories;
-
-drop policy if exists "public_select_products" on public.products;
-drop policy if exists "admin_manage_products" on public.products;
-
-drop policy if exists "public_select_neighborhoods" on public.neighborhoods;
-drop policy if exists "admin_manage_neighborhoods" on public.neighborhoods;
-
-drop policy if exists "public_select_settings" on public.store_settings;
-drop policy if exists "admin_manage_settings" on public.store_settings;
-
-drop policy if exists "public_insert_orders" on public.orders;
-drop policy if exists "public_track_order_by_token" on public.orders;
-drop policy if exists "admin_manage_orders" on public.orders;
-
-drop policy if exists "public_insert_order_items" on public.order_items;
-drop policy if exists "admin_manage_order_items" on public.order_items;
-
-drop policy if exists "admin_manage_coupons" on public.coupons;
-drop policy if exists "public_select_active_coupons" on public.coupons;
-
-drop policy if exists "admin_manage_notifications" on public.notifications;
-
--- =====================================================
--- POLICIES: LOJAS
--- =====================================================
-
-create policy "public_select_active_stores"
-on public.stores
-for select
-to anon, authenticated
-using (active = true);
-
-create policy "admin_manage_stores"
-on public.stores
-for all
-to authenticated
-using (public.is_store_manager(id))
-with check (public.is_store_manager(id));
-
--- =====================================================
--- POLICIES: STORE USERS
--- =====================================================
-
-create policy "store_users_select_own_store"
-on public.store_users
-for select
-to authenticated
-using (
-  user_id = auth.uid()
-  or public.is_store_manager(store_id)
-);
-
-create policy "store_users_owner_manage"
-on public.store_users
-for all
-to authenticated
-using (
-  exists (
-    select 1
-    from public.store_users su
-    where su.store_id = store_users.store_id
-      and su.user_id = auth.uid()
-      and su.active = true
-      and su.role = 'owner'
-  )
-)
-with check (
-  exists (
-    select 1
-    from public.store_users su
-    where su.store_id = store_users.store_id
-      and su.user_id = auth.uid()
-      and su.active = true
-      and su.role = 'owner'
-  )
-);
-
--- =====================================================
--- POLICIES: CATEGORIAS
--- =====================================================
-
-create policy "public_select_categories"
-on public.categories
-for select
-to anon, authenticated
-using (active = true);
-
-create policy "admin_manage_categories"
-on public.categories
-for all
-to authenticated
-using (public.is_store_manager(store_id))
-with check (public.is_store_manager(store_id));
-
--- =====================================================
--- POLICIES: PRODUTOS
--- =====================================================
-
-create policy "public_select_products"
-on public.products
-for select
-to anon, authenticated
-using (active = true);
-
-create policy "admin_manage_products"
-on public.products
-for all
-to authenticated
-using (public.is_store_manager(store_id))
-with check (public.is_store_manager(store_id));
-
--- =====================================================
--- POLICIES: BAIRROS
--- =====================================================
-
-create policy "public_select_neighborhoods"
-on public.neighborhoods
-for select
-to anon, authenticated
-using (active = true);
-
-create policy "admin_manage_neighborhoods"
-on public.neighborhoods
-for all
-to authenticated
-using (public.is_store_manager(store_id))
-with check (public.is_store_manager(store_id));
-
--- =====================================================
--- POLICIES: CONFIGURAÇÕES
--- =====================================================
-
-create policy "public_select_settings"
-on public.store_settings
-for select
-to anon, authenticated
-using (true);
-
-create policy "admin_manage_settings"
-on public.store_settings
-for all
-to authenticated
-using (public.is_store_manager(store_id))
-with check (public.is_store_manager(store_id));
-
--- =====================================================
--- POLICIES: PEDIDOS
--- =====================================================
-
--- Cliente público pode criar pedido.
-create policy "public_insert_orders"
-on public.orders
-for insert
-to anon, authenticated
-with check (
-  store_id is not null
-);
-
--- Cliente só acompanha pedido usando token público.
--- Não libera lista de pedidos.
-create policy "public_track_order_by_token"
-on public.orders
-for select
-to anon, authenticated
-using (
-  public_token is not null
-);
-
--- Admin vê e atualiza somente pedidos da loja dele.
-create policy "admin_manage_orders"
-on public.orders
-for all
-to authenticated
-using (public.is_store_admin(store_id))
-with check (public.is_store_admin(store_id));
-
--- =====================================================
--- POLICIES: ITENS DO PEDIDO
--- =====================================================
-
-create policy "public_insert_order_items"
-on public.order_items
-for insert
-to anon, authenticated
-with check (
-  store_id is not null
-);
-
-create policy "admin_manage_order_items"
-on public.order_items
-for all
-to authenticated
-using (public.is_store_admin(store_id))
-with check (public.is_store_admin(store_id));
-
--- =====================================================
--- POLICIES: CUPONS
--- =====================================================
-
-create policy "public_select_active_coupons"
-on public.coupons
-for select
-to anon, authenticated
-using (
-  active = true
-  and (expires_at is null or expires_at > now())
-);
-
-create policy "admin_manage_coupons"
-on public.coupons
-for all
-to authenticated
-using (public.is_store_manager(store_id))
-with check (public.is_store_manager(store_id));
-
--- =====================================================
--- POLICIES: NOTIFICAÇÕES
--- =====================================================
-
-create policy "admin_manage_notifications"
-on public.notifications
-for all
-to authenticated
-using (public.is_store_admin(store_id))
-with check (public.is_store_admin(store_id));
-
--- =====================================================
--- ÍNDICES
--- =====================================================
-
-create index if not exists idx_stores_slug on public.stores(slug);
-create index if not exists idx_store_users_user on public.store_users(user_id);
-create index if not exists idx_store_users_store on public.store_users(store_id);
-
-create index if not exists idx_categories_store on public.categories(store_id);
-create index if not exists idx_products_store on public.products(store_id);
-create index if not exists idx_products_category on public.products(category_id);
-create index if not exists idx_neighborhoods_store on public.neighborhoods(store_id);
-
-create index if not exists idx_orders_store on public.orders(store_id);
-create index if not exists idx_orders_status on public.orders(status);
-create index if not exists idx_orders_public_token on public.orders(public_token);
-create index if not exists idx_order_items_order on public.order_items(order_id);
-create index if not exists idx_order_items_store on public.order_items(store_id);
-
--- =====================================================
--- EXEMPLO: CRIAR LOJA LA CASA
--- =====================================================
-
-insert into public.stores (
-  name,
-  slug,
-  store_type,
-  phone,
-  whatsapp,
-  primary_color
-)
-values (
-  'La Casa da Pizza',
-  'la-casa-da-pizza',
-  'pizzaria',
-  '38999999999',
-  '38999999999',
-  '#ff6b35'
-)
-on conflict (slug) do nothing;
-
--- =====================================================
--- EXEMPLO: CONFIGURAÇÃO DA LOJA
--- =====================================================
-
-insert into public.store_settings (
-  store_id,
-  manual_closed,
-  closed_days,
-  open_time,
-  close_time,
-  delivery_time
-)
-select
-  id,
-  false,
-  '{}',
-  '18:00',
-  '23:59',
-  '30-50 min'
-from public.stores
-where slug = 'la-casa-da-pizza'
-on conflict (store_id) do nothing;
-
--- =====================================================
--- EXEMPLO: ADICIONAR ADMINS
--- CRIE ESSES USUÁRIOS ANTES EM AUTHENTICATION > USERS
--- =====================================================
-
-insert into public.store_users (
-  store_id,
-  user_id,
-  role
-)
-select
-  s.id,
-  u.id,
-  'owner'
-from public.stores s
-join auth.users u on u.email in (
-  'admin@lacasadapizza.com',
-  'rodsonpizzaria@gmail.com'
-)
-where s.slug = 'la-casa-da-pizza'
-on conflict (store_id, user_id) do nothing;
-
--- =====================================================
--- EXEMPLO: CATEGORIAS
--- =====================================================
-
-insert into public.categories (store_id, name, sort_order)
-select id, 'Pizzas Tradicionais', 1 from public.stores where slug = 'la-casa-da-pizza'
-on conflict do nothing;
-
-insert into public.categories (store_id, name, sort_order)
-select id, 'Pizzas Especiais', 2 from public.stores where slug = 'la-casa-da-pizza'
-on conflict do nothing;
-
-insert into public.categories (store_id, name, sort_order)
-select id, 'Bebidas', 3 from public.stores where slug = 'la-casa-da-pizza'
-on conflict do nothing;
-
--- =====================================================
--- EXEMPLO: PRODUTO
--- =====================================================
-
-insert into public.products (
-  store_id,
-  category_id,
-  name,
-  description,
-  price
-)
-select
-  s.id,
-  c.id,
-  'Pizza Calabresa',
-  'Muçarela e calabresa',
-  48
-from public.stores s
-join public.categories c on c.store_id = s.id
-where s.slug = 'la-casa-da-pizza'
-and c.name = 'Pizzas Tradicionais'
-limit 1;
-
--- =====================================================
--- EXEMPLO: BAIRRO
--- =====================================================
-
-insert into public.neighborhoods (
-  store_id,
-  name,
-  delivery_fee
-)
-select
-  id,
-  'Centro',
-  5
-from public.stores
-where slug = 'la-casa-da-pizza'
-on conflict do nothing;
-
--- =====================================================
--- MUITO IMPORTANTE NO SUPABASE
--- =====================================================
-
--- 1. Authentication > Providers > Email
--- 2. Desative "Enable signups"
--- 3. Crie usuários manualmente em Authentication > Users
--- 4. Nunca coloque SERVICE_ROLE no HTML
--- 5. Use somente ANON/PUBLIC KEY no front-end
--- 6. Hospede com HTTPS
-Esse modelo já separa tudo por store_id, então uma pizzaria não vê os pedidos da outra.
-Também não deixa o público listar pedidos; o público só cria pedido e acompanha pelo public_token.
-
-
-a parte de html como que fica?
-
-A parte HTML fica assim: um único site, mas ele carrega a loja pelo slug da URL.
-
-Exemplo de URL:
-
-seudominio.com/loja/la-casa-da-pizza
-No HTML/JS você pega o slug assim:
-
-const slug = window.location.pathname.split('/').pop();
-Depois busca a loja:
-
-const { data: store } = await supabase
-  .from('stores')
-  .select('*')
-  .eq('slug', slug)
-  .eq('active', true)
-  .single();
-E usa o store.id para carregar tudo:
-
-const { data: products } = await supabase
-  .from('products')
-  .select('*, categories(name)')
-  .eq('store_id', store.id)
-  .eq('active', true);
-
-const { data: bairros } = await supabase
-  .from('neighborhoods')
-  .select('*')
-  .eq('store_id', store.id)
-  .eq('active', true);
-Para criar pedido:
-
-const { data: order } = await supabase
-  .from('orders')
-  .insert({
-    store_id: store.id,
-    customer_name: nome,
-    customer_phone: telefone,
-    street: rua,
-    number: numero,
-    neighborhood: bairro,
-    payment_method: 'pix',
-    delivery_fee: taxa,
-    subtotal: subtotal,
-    total: total
-  })
-  .select()
-  .single();
-E os itens:
-
-await supabase.from('order_items').insert(
-  cart.map(item => ({
-    store_id: store.id,
-    order_id: order.id,
-    product_id: item.id,
-    product_name: item.name,
-    quantity: item.qty,
-    unit_price: item.price,
-    total_price: item.qty * item.price,
-    observation: item.observation || ''
-  }))
-);
-Resumo da estrutura:
-
-index.html          página pública do cliente
-admin.html          painel da loja
-login.html          login do admin
-Ou pode ser:
-
-/loja/[slug]        cardápio público
-/admin              painel admin
-/login              login
-O mais importante é: todo HTML precisa usar store_id depois de carregar o slug.
-
-
-eu como dono sass terei uma parte do html pra min farei tudo tipo slogas cadastros essas coisas como funciona
-
-Isso. Você como dono do SaaS terá um painel separado: o Super Admin.
-
-Fica assim:
-
-/loja/la-casa-da-pizza
-Cliente faz pedido.
-
-/admin
-Dono da pizzaria acessa pedidos, produtos, bairros e horários.
-
-/super-admin
-Você acessa para cadastrar lojas/clientes do seu SaaS.
-
-No seu Super Admin, você consegue:
-
-Cadastrar nova loja
-Editar nome da loja
-Criar slug/link da loja
-Escolher tipo: pizzaria, água, adega, hambúrguer etc.
-Cadastrar WhatsApp
-Cadastrar logo
-Escolher cor do tema
-Ativar ou desativar loja
-Criar usuário admin da loja
-Ver quantidade de pedidos por loja
-Controlar mensalidade
-Exemplo:
-
-Você cadastra:
-
-Nome: La Casa da Pizza
-Slug: la-casa-da-pizza
-Tipo: pizzaria
-WhatsApp: 38999999999
-Cor: #ff6b35
-O sistema gera o link:
-
-seudominio.com/loja/la-casa-da-pizza
-Depois você cria o login da pizzaria:
-
-admin@lacasadapizza.com
-E vincula esse usuário à loja na tabela:
-
-store_users
-A estrutura ideal de telas fica:
-
-login.html
-super-admin.html
-admin.html
-loja.html
-O fluxo:
-
-Você → super-admin.html → cadastra lojas
-Cliente da pizzaria → admin.html → gerencia pedidos
-Consumidor → loja.html → faz pedido
-No banco, você precisa também de uma tabela para você:
-
-create table platform_admins (
-  user_id uuid primary key references auth.users(id),
-  created_at timestamptz default now()
-);
-Aí só quem está nessa tabela consegue acessar o /super-admin.
-
-Resumo:
-Você não cadastra tudo direto no banco para sempre. No começo pode fazer pelo Supabase, mas o certo é criar um painel Super Admin para você controlar todos os clientes do SaaS.
-
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#100704,#210b05);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.login-box{
+  width:100%;
+  max-width:390px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+}
+.login-box h1{margin:0 0 8px;color:var(--brand2);font-size:28px}
+.login-box p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.4}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--brand2);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.input, .select, textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:#120804;
+  color:var(--text);
+  border-radius:14px;
+  padding:12px;
+  outline:none;
+}
+.input:focus,.select:focus,textarea:focus{border-color:var(--brand)}
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:11px 14px;
+  background:var(--brand);
+  color:#160801;
+  font-weight:800;
+}
+.btn.secondary{background:#35190f;color:var(--text);border:1px solid var(--line)}
+.btn.green{background:var(--green);color:#071b0d}
+.btn.blue{background:var(--blue);color:#061019}
+.btn.red{background:var(--red);color:#fff}
+.btn.small{padding:7px 10px;border-radius:10px;font-size:12px}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+}
+.sidebar{
+  background:rgba(18,8,4,.94);
+  border-right:1px solid var(--line);
+  padding:18px;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.logo-icon{
+  width:45px;height:45px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  font-size:24px;
+}
+.logo h2{margin:0;color:var(--brand2);font-size:18px}
+.logo span{font-size:12px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:8px}
+.nav button{
+  text-align:left;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid transparent;
+  border-radius:14px;
+  padding:12px;
+  font-weight:700;
+}
+.nav button.active{
+  background:var(--panel2);
+  color:var(--text);
+  border-color:var(--line);
+}
+.nav-footer{
+  position:absolute;
+  left:18px;right:18px;bottom:18px;
+}
+.main{
+  padding:22px;
+  max-width:1200px;
+  width:100%;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:20px;
+}
+.topbar h1{margin:0;color:var(--brand2);font-size:26px}
+.topbar p{margin:5px 0 0;color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.card{
+  background:rgba(28,13,8,.92);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.stat-value{font-size:26px;color:var(--brand2);font-weight:900}
+.dash-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(260px,.8fr);
+  gap:16px;
+  margin-bottom:18px;
+}
+.dash-hero-main{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,#351106,#7d260f 58%,#ff6b35);
+  border:1px solid rgba(255,180,92,.35);
+  border-radius:26px;
+  padding:24px;
+  box-shadow:0 18px 46px rgba(0,0,0,.3);
+}
+.dash-hero-main:after{
+  content:'';
+  position:absolute;
+  inset:auto -70px -90px auto;
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  background:rgba(255,244,232,.14);
+}
+.dash-kicker{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#ffe3c5;margin-bottom:8px}
+.dash-title{font-size:32px;line-height:1.05;font-weight:900;margin:0 0 10px;color:#fff}
+.dash-sub{font-size:14px;color:#ffe3c5;max-width:560px;line-height:1.5}
+.dash-total{font-size:42px;font-weight:900;color:#fff;margin-top:18px}
+.dash-side{display:grid;gap:12px}
+.metric-card{background:rgba(28,13,8,.92);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.2)}
+.metric-card strong{display:block;color:var(--brand2);font-size:24px;margin-top:6px}
+.metric-card span{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+.metric-card.good{border-color:rgba(46,204,113,.35)}.metric-card.warn{border-color:rgba(243,156,18,.4)}
+.dash-columns{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-bottom:18px}
+.mini-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.mini-row:last-child{border-bottom:0}.mini-row small{display:block;color:var(--muted);margin-top:3px}.mini-row b{color:var(--brand2)}
+.progress-line{height:10px;background:#120804;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:999px}
+.status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:7px;background:var(--brand2)}
+.status-dot.novo{background:var(--yellow)}.status-dot.aceito{background:var(--brand2)}.status-dot.preparando{background:var(--blue)}.status-dot.saiu_entrega{background:var(--green)}.status-dot.entregue{background:var(--green)}.status-dot.cancelado{background:var(--red)}
+.bar-list{display:grid;gap:11px}.bar-top{display:flex;justify-content:space-between;gap:10px;color:#ffe8d5;font-size:13px;font-weight:800}.bar-track{height:9px;background:#120804;border-radius:999px;overflow:hidden;border:1px solid var(--line)}.bar-fill{height:100%;background:linear-gradient(90deg,#ff6b35,#ffb45c)}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.section-title h2{margin:0;color:var(--brand2);font-size:20px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:11px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+th{color:var(--brand2);font-size:12px;text-transform:uppercase;letter-spacing:.7px}
+td{color:#ffe8d5}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:800;
+  background:#32170e;
+  border:1px solid var(--line);
+}
+.badge.novo{color:var(--yellow)} .badge.aceito{color:var(--brand2)} .badge.preparando{color:var(--blue)} .badge.saiu_entrega{color:var(--green)} .badge.entregue{color:var(--green)} .badge.cancelado{color:var(--red)}
+.order-card{
+  display:grid;
+  grid-template-columns:1.2fr 1fr auto;
+  gap:14px;
+  padding:14px;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  margin-bottom:10px;
+}
+.order-card strong{color:var(--brand2)}
+.order-meta{font-size:13px;color:var(--muted);line-height:1.5}
+.items{font-size:13px;line-height:1.5;color:#ffe8d5}
+.order-actions{display:grid;gap:8px;min-width:170px}
+.status-note{font-size:11px;color:var(--muted);font-weight:700;line-height:1.35}
+.order-primary-action{width:100%;display:flex;justify-content:center;align-items:center;gap:6px}
+.order-secondary-actions{display:flex;gap:6px;flex-wrap:wrap}
+.order-secondary-actions .btn{flex:1;min-width:76px}
+.muted{color:var(--muted);font-size:12px;font-weight:800}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.notice{
+  background:#2c140c;
+  border:1px solid var(--line);
+  color:#ffd7b5;
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:14px;
+  font-size:14px;
+}
+.tabs-mobile{display:none}
+@media(max-width:850px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:14px}
+  .tabs-mobile{
+    display:flex;
+    position:sticky;
+    top:0;
+    z-index:5;
+    gap:8px;
+    overflow-x:auto;
+    background:#100704;
+    padding:10px 0;
+    margin-bottom:12px;
+  }
+  .tabs-mobile button{
+    white-space:nowrap;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+    border-radius:999px;
+    padding:9px 12px;
+    font-weight:800;
+  }
+  .tabs-mobile button.active{background:var(--brand);color:#160801}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dash-hero,.dash-columns{grid-template-columns:1fr}
+  .order-card{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
 
 /* ===== MOBILE APP + TABELAS EM CARD ===== */
 @media(max-width:850px){
-html,body{max-width:100%;overflow-x!important;-webkit-tap-highlight-color}
-.app{grid-template-columns:1fr!important}
-.sidebar{display!important}
-.main{max-width:100%!important;width:100%!important;padding:12px!important;padding-bottom:96px!important}
-.topbar{position!important;top:0!important;z-index:40!important;background(16,7,4,.96);padding:10px 0!important;margin-bottom:8px!important;backdrop-filter(10px);flex-direction;gap:8px}
-.topbar h1{font-size:21px!important}
-.topbar p{font-size:12px!important}
-.tabs-mobile{display!important;grid-template-columns(6,auto);gap:6px!important;position!important;left:0!important;right:0!important;bottom:0!important;top!important;z-index:9997!important;background:#100704!important;border-top:1px solid var(--line)!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;margin:0!important;overflow-x!important;scrollbar-width!important;box-shadow:0 -10px 30px rgba(0,0,0,.35)!important}
-.tabs-mobile::-webkit-scrollbar{display!important}
-.tabs-mobile button{min-width:84px!important;min-height:50px!important;white-space!important;text-align!important;border-radius:14px!important;padding:7px 8px!important;font-size:11px!important;line-height:1.15!important;border:1px solid var(--line)!important;background(--panel)!important;color(--muted)!important}
-.tabs-mobile button.active{background(135deg,var(--brand),var(--brand2))!important;color:#160801!important}
-.grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
-.dash-hero,.dash-columns{grid-template-columns:1fr!important}
-.dash-title{font-size:25px!important}.dash-total{font-size:32px!important}
-.card{border-radius:18px!important;padding:14px!important}
-.order-card{grid-template-columns:1fr!important;padding:13px!important}
-.form-grid{grid-template-columns:1fr!important}
-.btn{min-height:46px;border-radius:14px}
-.btn.small{min-height:38px;font-size:13px}
-.input,.select,textarea{min-height:46px;font-size:16px}
-.table-wrap{overflow!important}
-table{min-width:0!important;width:100%!important;display!important}
-thead{display!important}
-tbody{display!important;width:100%!important}
-tr{display!important;width:100%!important;background:#160904;border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
-td{display!important;width:100%!important;border-bottom!important;padding:6px 0!important;font-size:13px!important}
-td .input{width:100%!important;max-width:100%!important}
-td(1)::before{content:"Nome";display;color(--brand2);font-size:11px;font-weight:900;text-transform;margin-bottom:4px}
-td(2)::before{content:"Preço / Taxa";display;color(--brand2);font-size:11px;font-weight:900;text-transform;margin-bottom:4px}
-td(3)::before{content:"Ativo";display;color(--brand2);font-size:11px;font-weight:900;text-transform;margin-bottom:4px}
-td(4)::before{content:"Ações";display;color(--brand2);font-size:11px;font-weight:900;text-transform;margin-bottom:6px}
-td .row{display!important;grid-template-columns:1fr 1fr;gap:8px!important;width:100%}
-td .row .btn{width:100%;min-width:0}
+  html,body{max-width:100%;overflow-x:hidden!important;-webkit-tap-highlight-color:transparent}
+  .app{grid-template-columns:1fr!important}
+  .sidebar{display:none!important}
+  .main{max-width:100%!important;width:100%!important;padding:12px!important;padding-bottom:96px!important}
+  .topbar{position:sticky!important;top:0!important;z-index:40!important;background:rgba(16,7,4,.96);padding:10px 0!important;margin-bottom:8px!important;backdrop-filter:blur(10px);flex-direction:column;gap:8px}
+  .topbar h1{font-size:21px!important}
+  .topbar p{font-size:12px!important}
+  .tabs-mobile{display:grid!important;grid-template-columns:repeat(6,auto);gap:6px!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;z-index:9997!important;background:#100704!important;border-top:1px solid var(--line)!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;margin:0!important;overflow-x:auto!important;scrollbar-width:none!important;box-shadow:0 -10px 30px rgba(0,0,0,.35)!important}
+  .tabs-mobile::-webkit-scrollbar{display:none!important}
+  .tabs-mobile button{min-width:84px!important;min-height:50px!important;white-space:normal!important;text-align:center!important;border-radius:14px!important;padding:7px 8px!important;font-size:11px!important;line-height:1.15!important;border:1px solid var(--line)!important;background:var(--panel)!important;color:var(--muted)!important}
+  .tabs-mobile button.active{background:linear-gradient(135deg,var(--brand),var(--brand2))!important;color:#160801!important}
+  .grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .dash-hero,.dash-columns{grid-template-columns:1fr!important}
+  .dash-title{font-size:25px!important}.dash-total{font-size:32px!important}
+  .card{border-radius:18px!important;padding:14px!important}
+  .order-card{grid-template-columns:1fr!important;padding:13px!important}
+  .form-grid{grid-template-columns:1fr!important}
+  .btn{min-height:46px;border-radius:14px}
+  .btn.small{min-height:38px;font-size:13px}
+  .input,.select,textarea{min-height:46px;font-size:16px}
+  .table-wrap{overflow:visible!important}
+  table{min-width:0!important;width:100%!important;display:block!important}
+  thead{display:none!important}
+  tbody{display:block!important;width:100%!important}
+  tr{display:block!important;width:100%!important;background:#160904;border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
+  td{display:block!important;width:100%!important;border-bottom:none!important;padding:6px 0!important;font-size:13px!important}
+  td .input{width:100%!important;max-width:100%!important}
+  td:nth-child(1)::before{content:"Nome";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px}
+  td:nth-child(2)::before{content:"Preço / Taxa";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px}
+  td:nth-child(3)::before{content:"Ativo";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px}
+  td:nth-child(4)::before{content:"Ações";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:6px}
+  td .row{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;width:100%}
+  td .row .btn{width:100%;min-width:0}
 }
 @media(max-width:520px){.grid{grid-template-columns:1fr!important}}
-.install-fab{position;right:14px;bottom(86px + env(safe-area-inset-bottom));z-index:9999;border:0;border-radius:999px;background(135deg,var(--brand),var(--brand2));color:#160801;font-weight:900;padding:14px 18px;box-shadow:0 14px 35px rgba(0,0,0,.45);display}
-.install-card{position;left:12px;right:12px;bottom(148px + env(safe-area-inset-bottom));z-index:9998;background:#160904;border:1px solid var(--line);color(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);display;font-size:15px;line-height:1.45}
-.install-card.show{display}.install-card strong{color(--brand2)}.install-actions{display;gap:8px;margin-top:10px;flex-wrap}
-.push-status{display;position;left:12px;right:12px;bottom(148px + env(safe-area-inset-bottom));z-index:9997;background:#160904;border:1px solid var(--line);color(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);font-size:14px;line-height:1.45}
-.push-status.show{display}.push-status strong{display;color(--brand2);margin-bottom:4px}.push-status.ok{border-color(46,204,113,.45)}.push-status.warn{border-color(243,156,18,.45)}.push-status.err{border-color(231,76,60,.45)}
-.push-status{display;position;left:12px;right:12px;bottom(148px + env(safe-area-inset-bottom));z-index:9997;background:#160904;border:1px solid var(--line);color(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);font-size:14px;line-height:1.45}
-.push-status.show{display}.push-status strong{display;color(--brand2);margin-bottom:4px}.push-status.ok{border-color(46,204,113,.45)}.push-status.warn{border-color(243,156,18,.45)}.push-status.err{border-color(231,76,60,.45)}
+.install-fab{position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:9999;border:0;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#160801;font-weight:900;padding:14px 18px;box-shadow:0 14px 35px rgba(0,0,0,.45);display:block}
+.install-card{position:fixed;left:12px;right:12px;bottom:calc(148px + env(safe-area-inset-bottom));z-index:9998;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);display:none;font-size:15px;line-height:1.45}
+.install-card.show{display:block}.install-card strong{color:var(--brand2)}.install-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.push-status{display:none;position:fixed;left:12px;right:12px;bottom:calc(148px + env(safe-area-inset-bottom));z-index:9997;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);font-size:14px;line-height:1.45}
+.push-status.show{display:block}.push-status strong{display:block;color:var(--brand2);margin-bottom:4px}.push-status.ok{border-color:rgba(46,204,113,.45)}.push-status.warn{border-color:rgba(243,156,18,.45)}.push-status.err{border-color:rgba(231,76,60,.45)}
+.push-status{display:none;position:fixed;left:12px;right:12px;bottom:calc(148px + env(safe-area-inset-bottom));z-index:9997;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);font-size:14px;line-height:1.45}
+.push-status.show{display:block}.push-status strong{display:block;color:var(--brand2);margin-bottom:4px}.push-status.ok{border-color:rgba(46,204,113,.45)}.push-status.warn{border-color:rgba(243,156,18,.45)}.push-status.err{border-color:rgba(231,76,60,.45)}
+
 
 /* ===== ALERTA DE NOVO PEDIDO ===== */
 .order-alert{
-position;
-left:12px;
-right:12px;
-top(12px + env(safe-area-inset-top));
-z-index:10000;
-background(135deg,#ff6b35,#ffb45c);
-color:#160801;
-border-radius:18px;
-padding:16px;
-box-shadow:0 18px 50px rgba(0,0,0,.55);
-display;
-animation .8s infinite alternate;
+  position:fixed;
+  left:12px;
+  right:12px;
+  top:calc(12px + env(safe-area-inset-top));
+  z-index:10000;
+  background:linear-gradient(135deg,#ff6b35,#ffb45c);
+  color:#160801;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);
+  display:none;
+  animation:alertPulse .8s infinite alternate;
 }
-.order-alert.show{display}
-.order-alert strong{font-size:18px;display;margin-bottom:4px}
-.order-alert .row{justify-content}
+.order-alert.show{display:block}
+.order-alert strong{font-size:18px;display:block;margin-bottom:4px}
+.order-alert .row{justify-content:space-between}
 @keyframes alertPulse{
-from{transform(1)}
-to{transform(1.025)}
+  from{transform:scale(1)}
+  to{transform:scale(1.025)}
 }
 .alert-controls{
-display;
-gap:8px;
-flex-wrap;
-margin-top:10px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
 .alert-controls button{
-flex:1;
+  flex:1;
 }
+
 
 /* ===== IMPRESSORA BLUETOOTH TERMICA ===== */
 .printer-panel{
-display;
-gap:10px;
-align-items;
-flex-wrap;
-background:#160904;
-border:1px solid var(--line);
-border-radius:18px;
-padding:12px;
-margin-bottom:14px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
 }
 .printer-status{
-font-size:13px;
-color(--muted);
-width:100%;
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
 }
-.printer-status.ok{color(--green)}
-.printer-status.err{color(--red)}
-.printer-status.wait{color(--yellow)}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
 
-📲 Instalar
 
-const w=window.open('','_blank','width=360,height=640');
-w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
+
+/* ===== ICONES FONT AWESOME ===== */
+.logo-icon i{
+  font-size:22px;
+  color:#160801;
+}
+.nav i,
+button i,
+h1 i,
+h2 i,
+strong i{
+  margin-right:6px;
+}
+.tabs-mobile i{
+  display:block;
+  margin-right:0;
+  margin-bottom:4px;
+  font-size:17px;
+}
+.nav button{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+button i{pointer-events:none}
+.install-fab{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+</style>
+</head>
+<body>
+
+
+<div id="orderAlert" class="order-alert">
+  <strong><i class="fa-solid fa-bell"></i> Novo pedido chegou!</strong>
+  <div id="orderAlertText">Verifique a aba Pedidos.</div>
+  <div class="alert-controls">
+    <button class="btn small" onclick="go('pedidos');hideOrderAlert()">Ver pedido</button>
+    <button class="btn small secondary" onclick="hideOrderAlert()">Fechar</button>
+  </div>
+</div>
+
+<section id="loginScreen" class="login">
+  <form class="login-box" onsubmit="login(event)">
+    <h1><i class="fa-solid fa-pizza-slice"></i> La Casa Admin</h1>
+    <p>Painel novo para acompanhar pedidos, dashboard, produtos, bairros, bebidas e funcionamento.</p>
+    <div class="field">
+      <label>Email</label>
+      <input class="input" id="email" type="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input class="input" id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn" id="loginBtn" type="submit" style="width:100%">Entrar</button>
+    <div id="loginMsg" class="notice hidden" style="margin-top:14px"></div>
+  </form>
+</section>
+
+<section id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-pizza-slice"></i></div>
+      <div><h2>La Casa</h2><span>Painel administrativo</span></div>
+    </div>
+    <nav class="nav" id="sideNav"></nav>
+    <div class="nav-footer">
+      <button class="btn secondary" onclick="logout()" style="width:100%">Sair</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="tabs-mobile" id="mobileNav"></div>
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Resumo geral da pizzaria.</p>
+      </div>
+      <div class="row">
+        <button class="btn secondary" id="pushBtn" onclick="enablePushNotifications()">Ativar notifica��es</button>
+        <button class="btn secondary" onclick="loadAll()">Atualizar</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</section>
+
+
+<button id="installBtn" class="install-fab" onclick="installApp()"><i class="fa-solid fa-mobile-screen"></i> Instalar</button>
+<div id="installCard" class="install-card">
+  <strong>Instalar o painel no aparelho</strong><br>
+  <span id="installText">Android: toque em Instalar. iPhone: Compartilhar → Adicionar à Tela de Início.</span>
+  <div class="install-actions">
+    <button class="btn small" onclick="installApp()">Instalar agora</button>
+    <button class="btn small secondary" onclick="hideInstallCard()">Fechar</button>
+  </div>
+</div>
+<div id="pushStatus" class="push-status"></div>
+
+<script>
+const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
+const SUPABASE_KEY='sb_publishable_DqoB81h8n1YjjT6rZpEo1Q_dadcornK';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const WEB_PUSH_PUBLIC_KEY='BEu1mk3XLhqAublAwbFp0MYqXJeGpFjQ4vApCylabn6_UIamiH2zUZATE6Cwf0XDQVNIfJkQfnZEUK1iiBBcN18';
+let current='pedidos';
+let session=null;
+let orders=[];
+let products=[];
+let bairros=[];
+let settings={manual_closed:false,closed_days:[],use_hours:false,open_time:'18:00',close_time:'23:59'};
+let adminServiceWorkerRegistration=null;
+const ADMIN_SESSION_KEY='la_casa_admin_login_at';
+const ADMIN_SESSION_MAX_MS=24*60*60*1000;
+
+const pages=[
+  ['pedidos','Pedidos','Pedidos recebidos pelo site'],
+  ['dashboard','Dashboard','Resumo geral'],
+  ['produtos','<i class="fa-solid fa-pizza-slice"></i> Produtos','Preços e produtos'],
+  ['bebidas','<i class="fa-solid fa-glass-water"></i> Bebidas','Cadastro de bebidas'],
+  ['bairros','<i class="fa-solid fa-motorcycle"></i> Bairros','Taxas de entrega'],
+  ['funcionamento','<i class="fa-solid fa-clock"></i> Funcionamento','Abrir, fechar e dias de folga']
+];
+
+const $=id=>document.getElementById(id);
+const money=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const stripHtml=s=>String(s??'')
+  .replace(/<[^>]*>/g,'')
+  .replace(/[^\wÀ-ÿ\s]/g,'')
+  .trim();
+
+const TZ_BR='America/Sao_Paulo';
+function dateKeyBR(date=new Date()){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:TZ_BR,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const y=parts.find(p=>p.type==='year')?.value;
+  const m=parts.find(p=>p.type==='month')?.value;
+  const d=parts.find(p=>p.type==='day')?.value;
+  return `${y}-${m}-${d}`;
+}
+const today=()=>dateKeyBR();
+function addDaysKey(key,days){
+  const [y,m,d]=String(key||today()).split('-').map(Number);
+  const date=new Date(Date.UTC(y,m-1,d+days,12,0,0));
+  return dateKeyBR(date);
+}
+
+function formatDateBRFromOrder(order){
+  const source=order.created_at || order.data;
+  if(!source && order.data) return order.data;
+  try{
+    const date=source && String(source).includes('T') ? new Date(source) : new Date((order.data||source)+'T12:00:00');
+    return new Intl.DateTimeFormat('pt-BR',{timeZone:TZ_BR,day:'2-digit',month:'2-digit',year:'numeric'}).format(date);
+  }catch(e){
+    return order.data || '';
+  }
+}
+
+function formatTimeBRFromOrder(order){
+  if(order.created_at){
+    try{
+      return new Intl.DateTimeFormat('pt-BR',{timeZone:TZ_BR,hour:'2-digit',minute:'2-digit'}).format(new Date(order.created_at));
+    }catch(e){}
+  }
+  return order.hora || '';
+}
+
+function orderDateKeyBR(order){
+  if(order.created_at){
+    try{
+      const parts=new Intl.DateTimeFormat('en-CA',{timeZone:TZ_BR,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(order.created_at));
+      const y=parts.find(p=>p.type==='year')?.value;
+      const m=parts.find(p=>p.type==='month')?.value;
+      const d=parts.find(p=>p.type==='day')?.value;
+      return `${y}-${m}-${d}`;
+    }catch(e){}
+  }
+  return order.data || '';
+}
+
+
+function setMsg(text){
+  const el=$('loginMsg');
+  el.textContent=text||'';
+  el.classList.toggle('hidden',!text);
+}
+
+function markAdminLogin(){
+  localStorage.setItem(ADMIN_SESSION_KEY,String(Date.now()));
+}
+
+function clearAdminLogin(){
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+}
+
+function isAdminLoginExpired(){
+  const raw=localStorage.getItem(ADMIN_SESSION_KEY);
+  if(!raw) return true;
+  const loggedAt=Number(raw);
+  if(!Number.isFinite(loggedAt)) return true;
+  return Date.now()-loggedAt>=ADMIN_SESSION_MAX_MS;
+}
+
+async function requireFreshLogin(message){
+  if(realtimeChannel){
+    try{await db.removeChannel(realtimeChannel);}catch(e){}
+    realtimeChannel=null;
+  }
+  clearAdminLogin();
+  await db.auth.signOut();
+  session=null;
+  $('app').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');
+  if(message) setMsg(message);
+}
+
+function renderNav(){
+  const html=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
+  const mobileLabels={
+    dashboard:'<i class="fa-solid fa-chart-line"></i><br>Dash',
+    pedidos:'<i class="fa-solid fa-box"></i><br>Pedidos',
+    produtos:'<i class="fa-solid fa-pizza-slice"></i><br>Pizza',
+    bebidas:'<i class="fa-solid fa-glass-water"></i><br>Bebidas',
+    bairros:'<i class="fa-solid fa-motorcycle"></i><br>Bairros',
+    funcionamento:'<i class="fa-solid fa-clock"></i><br>Loja'
+  };
+  const mobileHtml=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${mobileLabels[p[0]]||p[1]}</button>`).join('');
+  $('sideNav').innerHTML=html;
+  $('mobileNav').innerHTML=mobileHtml;
+}
+
+function go(page){
+  current=page;
+  const p=pages.find(x=>x[0]===page)||pages[0];
+  $('pageTitle').textContent=stripHtml(p[1]);
+  $('pageSubtitle').textContent=p[2];
+  renderNav();
+  render();
+}
+
+async function login(e){
+  e.preventDefault();
+  setMsg('');
+  $('loginBtn').disabled=true;
+  $('loginBtn').textContent='Entrando...';
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  $('loginBtn').disabled=false;
+  $('loginBtn').textContent='Entrar';
+  if(error){setMsg('Email ou senha inválidos.');return;}
+  session=data.session;
+  markAdminLogin();
+  await start();
+}
+
+async function logout(){
+  if(realtimeChannel){
+    try{await db.removeChannel(realtimeChannel);}catch(e){}
+    realtimeChannel=null;
+  }
+  clearAdminLogin();
+  await db.auth.signOut();
+  session=null;
+  $('app').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');
+}
+
+async function start(){
+  if(isAdminLoginExpired()){
+    await requireFreshLogin('Sessão expirada. Entre novamente para continuar.');
+    return;
+  }
+  $('loginScreen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  renderNav();
+  await loadAll();
+  rememberLatestOrder();
+  startOrderRealtime();
+  updatePushButton();
+  go('pedidos');
+}
+
+async function loadAll(){
+  try{
+    const [ordersRes, productsRes, bairrosRes, settingsRes]=await Promise.all([
+      db.from('orders').select('*,order_items(*)').order('created_at',{ascending:false}).limit(1000),
+      db.from('products').select('*').order('category').order('name'),
+      db.from('bairros').select('*').order('name'),
+      db.from('store_settings').select('*').eq('key','status').maybeSingle()
+    ]);
+    if(ordersRes.error) throw ordersRes.error;
+    if(productsRes.error) throw productsRes.error;
+    if(bairrosRes.error) throw bairrosRes.error;
+    orders=ordersRes.data||[];
+    products=productsRes.data||[];
+    bairros=bairrosRes.data||[];
+    if(settingsRes.data?.value) settings=Object.assign({manual_closed:false,closed_days:[],use_hours:false,open_time:'18:00',close_time:'23:59'},settingsRes.data.value);
+    render();
+  }catch(err){
+    console.error(err);
+    $('content').innerHTML='<div class="notice">Erro ao carregar dados: '+esc(err.message||err)+'</div>';
+  }
+}
+
+function render(){
+  if(current==='dashboard') return renderDashboard();
+  if(current==='pedidos') return renderPedidos();
+  if(current==='produtos') return renderProducts('Pizza Preco');
+  if(current==='bebidas') return renderProducts('Bebida');
+  if(current==='bairros') return renderBairros();
+  if(current==='funcionamento') return renderFuncionamento();
+}
+
+function normalizePaymentType(value){
+  const p=String(value||'').toLowerCase();
+  if(p.includes('pix')) return 'pix';
+  if(p.includes('cart')) return 'cartao';
+  if(p.includes('dinheiro')) return 'dinheiro';
+  return 'outros';
+}
+
+function renderDashboard(){
+  const pedidosValidos=orders.filter(o=>o.status!=='cancelado');
+  const hoje=pedidosValidos.filter(o=>orderDateKeyBR(o)===today());
+  const faturamentoHoje=hoje.reduce((s,o)=>s+Number(o.total||0),0);
+  const faturamentoGeral=pedidosValidos.reduce((s,o)=>s+Number(o.total||0),0);
+  const pix=hoje.filter(o=>normalizePaymentType(o.pagamento)==='pix').reduce((s,o)=>s+Number(o.total||0),0);
+  const dinheiro=hoje.filter(o=>normalizePaymentType(o.pagamento)==='dinheiro').reduce((s,o)=>s+Number(o.total||0),0);
+  const cartao=hoje.filter(o=>normalizePaymentType(o.pagamento)==='cartao').reduce((s,o)=>s+Number(o.total||0),0);
+  const outros=hoje.filter(o=>normalizePaymentType(o.pagamento)==='outros').reduce((s,o)=>s+Number(o.total||0),0);
+  const novos=hoje.filter(o=>o.status==='novo').length;
+  const preparandoHoje=hoje.filter(o=>o.status==='preparando').length;
+  const entreguesHoje=hoje.filter(o=>o.status==='entregue').length;
+  const ticket=pedidosValidos.length?faturamentoGeral/pedidosValidos.length:0;
+  const ticketHoje=hoje.length?faturamentoHoje/hoje.length:0;
+  const pedidosOntem=pedidosValidos.filter(o=>orderDateKeyBR(o)===addDaysKey(today(),-1));
+  const faturamentoOntem=pedidosOntem.reduce((s,o)=>s+Number(o.total||0),0);
+  const variacaoOntem=faturamentoOntem?((faturamentoHoje-faturamentoOntem)/faturamentoOntem)*100:null;
+  const top={};
+  hoje.forEach(o=>(o.order_items||[]).forEach(i=>{top[i.name]=(top[i.name]||0)+Number(i.qty||0)}));
+  const topList=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxTop=Math.max(1,...topList.map(([,qty])=>qty));
+  const statusRows=[['novo','Novos',novos],['aceito','Aceitos',hoje.filter(o=>o.status==='aceito').length],['preparando','Preparando',preparandoHoje],['saiu_entrega','Saiu para entrega',hoje.filter(o=>o.status==='saiu_entrega').length],['entregue','Entregues',entreguesHoje],['cancelado','Cancelados hoje',orders.filter(o=>o.status==='cancelado'&&orderDateKeyBR(o)===today()).length]];
+  const paymentRows=[['PIX',pix],['Dinheiro',dinheiro],['Cartao',cartao],['Outros',outros]];
+  const maxPayment=Math.max(1,...paymentRows.map(([,value])=>value));
+  const ultimos=hoje.slice(0,5);
+  const lojaFechada=settings.manual_closed||((settings.closed_days||[]).map(Number).includes(new Date().getDay()));
+  const storeLabel=lojaFechada?'Loja fechada':'Loja aberta';
+  const storeClass=lojaFechada?'warn':'good';
+  const deltaText=variacaoOntem===null?'Sem comparativo com ontem':`${variacaoOntem>=0?'+':''}${variacaoOntem.toFixed(1).replace('.',',')}% vs ontem`;
+  $('content').innerHTML=`
+    <div class="dash-hero">
+      <div class="dash-hero-main"><div class="dash-kicker">Resumo de hoje � ${esc(formatDateBRFromOrder({created_at:new Date().toISOString()}))}</div><h2 class="dash-title">Painel de controle da pizzaria</h2><div class="dash-sub">Acompanhe pedidos, faturamento, formas de pagamento e itens mais vendidos do dia em tempo real.</div><div class="dash-total">${money(faturamentoHoje)}</div><div class="dash-sub">${esc(deltaText)}</div></div>
+      <div class="dash-side"><div class="metric-card ${storeClass}"><span>Status da loja</span><strong>${storeLabel}</strong></div><div class="metric-card"><span>Pedidos hoje</span><strong>${hoje.length}</strong></div><div class="metric-card"><span>Ticket medio hoje</span><strong>${money(ticketHoje)}</strong></div></div>
+    </div>
+    <div class="grid"><div class="card"><div class="stat-label">Novos hoje</div><div class="stat-value">${novos}</div></div><div class="card"><div class="stat-label">Preparando</div><div class="stat-value">${preparandoHoje}</div></div><div class="card"><div class="stat-label">Entregues hoje</div><div class="stat-value">${entreguesHoje}</div></div><div class="card"><div class="stat-label">Faturamento geral</div><div class="stat-value">${money(faturamentoGeral)}</div></div></div>
+    <div class="dash-columns"><div class="card"><div class="section-title"><h2>Status dos pedidos</h2><button class="btn small secondary" onclick="go('pedidos')">Ver pedidos</button></div>${statusRows.map(([key,label,count])=>{const pct=hoje.length?Math.round((count/hoje.length)*100):0;return `<div class="mini-row"><div><span class="status-dot ${key}"></span>${label}<small>${pct}% dos pedidos de hoje</small><div class="progress-line"><div class="progress-fill" style="width:${pct}%"></div></div></div><b>${count}</b></div>`;}).join('')}</div><div class="card"><div class="section-title"><h2>Pagamentos hoje</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div><div class="bar-list">${paymentRows.map(([label,value])=>`<div><div class="bar-top"><span>${label}</span><strong>${money(value)}</strong></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((value/maxPayment)*100)}%"></div></div></div>`).join('')}</div></div></div>
+    <div class="dash-columns"><div class="card"><div class="section-title"><h2>Ultimos pedidos de hoje</h2><button class="btn small secondary" onclick="go('pedidos')">Abrir dia</button></div>${ultimos.length?ultimos.map(o=>`<div class="mini-row"><div><b>Pedido #${esc(o.numero||String(o.id).slice(0,8))}</b><small>${esc(formatTimeBRFromOrder(o))} � ${esc(o.cliente||'Cliente nao informado')} � ${esc(o.pagamento||'')}</small></div><strong>${money(o.total)}</strong></div>`).join(''):'<div class="notice">Nenhum pedido recebido hoje.</div>'}</div><div class="card"><div class="section-title"><h2>Mais vendidos hoje</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div>${topList.length?topList.map(([name,qty])=>`<div><div class="bar-top"><span>${esc(name)}</span><strong>${qty}x</strong></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((qty/maxTop)*100)}%"></div></div></div>`).join('<div style="height:10px"></div>'):'<div class="notice">Ainda nao ha itens vendidos hoje.</div>'}</div></div>
+    <div class="grid"><div class="card"><div class="stat-label">Pedidos validos no historico</div><div class="stat-value">${pedidosValidos.length}</div></div><div class="card"><div class="stat-label">Ticket medio geral</div><div class="stat-value">${money(ticket)}</div></div><div class="card"><div class="stat-label">Faturamento ontem</div><div class="stat-value">${money(faturamentoOntem)}</div></div><div class="card"><div class="stat-label">Pedidos ontem</div><div class="stat-value">${pedidosOntem.length}</div></div></div>`;
+}
+
+function getOrderRua(order){
+  if(order.rua) return order.rua;
+  const endereco=String(order.endereco||'').trim();
+  if(!endereco) return '';
+  const labeled=endereco.match(/Rua:\s*([^|]+)/i);
+  if(labeled) return labeled[1].trim();
+  return endereco.replace(/,\s*\d+.*$/,'').replace(/\s+\d+\s*$/,'').trim() || endereco;
+}
+function getOrderNumero(order){
+  if(order.numero_endereco) return order.numero_endereco;
+  if(order.numero_casa) return order.numero_casa;
+  if(order.numero_rua) return order.numero_rua;
+  if(order.numero_residencia) return order.numero_residencia;
+  const endereco=String(order.endereco||'').trim();
+  const labeled=endereco.match(/Numero:\s*([^|]+)/i);
+  if(labeled) return labeled[1].trim();
+  const match=endereco.match(/(?:,\s*|\s+)(\d+[A-Za-z]?)\s*$/);
+  return match ? match[1] : '';
+}
+function getOrderComplemento(order){return order.complemento || order.comp || ''}
+function getOrderReferencia(order){return order.referencia || order.ponto_referencia || order.ref || ''}
+function getOrderTelefone(order){
+  if(order.telefone) return order.telefone;
+  if(order.phone) return order.phone;
+  if(order.whatsapp) return order.whatsapp;
+  const match=String(order.cliente||'').match(/(?:Tel|Telefone|WhatsApp):\s*([^|]+)/i);
+  return match ? match[1].trim() : '';
+}
+function getOrderClienteNome(order){
+  return String(order.cliente||'').replace(/\s*\|\s*(?:Tel|Telefone|WhatsApp):\s*.*$/i,'').trim();
+}
+function renderEnderecoHtml(order){
+  const rua=getOrderRua(order), numero=getOrderNumero(order), bairro=order.bairro||'', complemento=getOrderComplemento(order), referencia=getOrderReferencia(order);
+  return `
+    <div><b>Rua:</b> ${esc(rua||'Não informada')}</div>
+    <div><b>Número:</b> ${esc(numero||'Não informado')}</div>
+    <div><b>Bairro:</b> ${esc(bairro||'Não informado')}</div>
+    ${complemento?`<div><b>Complemento:</b> ${esc(complemento)}</div>`:''}
+    ${referencia?`<div><b>Referência:</b> ${esc(referencia)}</div>`:''}`;
+}
+function renderEnderecoPrintHtml(order){
+  const rua=getOrderRua(order), numero=getOrderNumero(order), bairro=order.bairro||'', complemento=getOrderComplemento(order), referencia=getOrderReferencia(order);
+  return `
+    <p><b>Rua:</b><br>${esc(rua||'Não informada')}</p>
+    <p><b>Número:</b><br>${esc(numero||'Não informado')}</p>
+    <p><b>Bairro:</b><br>${esc(bairro||'Não informado')}</p>
+    ${complemento?`<p><b>Complemento:</b><br>${esc(complemento)}</p>`:''}
+    ${referencia?`<p><b>Referência:</b><br>${esc(referencia)}</p>`:''}`;
+}
+
+
+function renderEnderecoTexto(order){
+  const rua=getOrderRua(order);
+  const numero=getOrderNumero(order);
+  const bairro=order.bairro||'';
+  const complemento=getOrderComplemento(order);
+  const referencia=getOrderReferencia(order);
+  const linhas=[];
+  if(rua) linhas.push('Rua: '+rua);
+  if(numero) linhas.push('Numero: '+numero);
+  if(bairro) linhas.push('Bairro: '+bairro);
+  if(complemento) linhas.push('Comp: '+complemento);
+  if(referencia) linhas.push('Ref: '+referencia);
+  if(!linhas.length && order.endereco) linhas.push(order.endereco);
+  return linhas.join('\n');
+}
+
+function renderPedidos(){
+  $('content').innerHTML=renderPrinterPanel()+`
+    <div class="card">
+      <div class="section-title">
+        <h2>Pedidos do dia</h2>
+        <div class="row">
+          <input class="input" id="filterDate" type="date" value="${today()}" style="width:auto" onchange="renderPedidosList()">
+          <button class="btn small secondary" onclick="setOrdersDate(today())">Hoje</button>
+          <button class="btn small secondary" onclick="setOrdersDate(addDaysKey(today(),-1))">Ontem</button>
+          <select class="select" id="filterStatus" style="width:auto" onchange="renderPedidosList()">
+            <option value="">Todos</option>
+            <option value="novo">Novo</option>
+            <option value="aceito">Aceito</option>            <option value="preparando">Preparando</option>            <option value="saiu_entrega">Saiu para entrega</option>
+            <option value="entregue">Entregue</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+          <button class="btn small secondary" onclick="loadAll()">Atualizar</button>
+        </div>
+      </div>
+      <div id="ordersArea"></div>
+    </div>`;
+  renderPedidosList();
+}
+
+function setOrdersDate(dateKey){
+  const input=$('filterDate');
+  if(input) input.value=dateKey;
+  renderPedidosList();
+}
+
+function statusLabel(status){
+  const labels={novo:'Novo',aceito:'Aceito',preparando:'Preparando',saiu_entrega:'Saiu para entrega',entregue:'Entregue',cancelado:'Cancelado'};
+  return labels[status]||status||'Novo';
+}
+
+function statusActionButtons(order){
+  const id=esc(order.id);
+  const status=order.status||'novo';
+  if(status==='cancelado') return '<div class="status-note">Pedido cancelado. O cliente ver� essa atualiza��o no acompanhamento.</div>';
+  if(status==='entregue') return '<div class="status-note">Pedido finalizado. Sem a��o pendente.</div>';
+  const next={
+    novo:{status:'aceito',label:'Aceitar pedido',cls:'green',note:'Confirma para o cliente que a pizzaria recebeu o pedido.'},
+    aceito:{status:'preparando',label:'Iniciar preparo',cls:'blue',note:'Mostra para o cliente que o pedido est� sendo preparado.'},
+    preparando:{status:'saiu_entrega',label:'Saiu para entrega',cls:'green',note:'Avan�a o acompanhamento para entrega.'},
+    saiu_entrega:{status:'entregue',label:'Marcar entregue',cls:'secondary',note:'Finaliza o acompanhamento deste pedido.'}
+  }[status]||{status:'aceito',label:'Aceitar pedido',cls:'green',note:'Pr�xima etapa do pedido.'};
+  return `<div class="order-actions">
+    <button class="btn small ${next.cls} order-primary-action" onclick="updateStatus('${id}','${next.status}')">${next.label}</button>
+    <div class="status-note">${next.note}</div>
+    <div class="order-secondary-actions"><button class="btn small red" onclick="updateStatus('${id}','cancelado')">Cancelar</button></div>
+  </div>`;
+}
+function renderPedidosList(){
+  const status=$('filterStatus')?.value||'';
+  const date=$('filterDate')?.value||today();
+  const list=orders.filter(o=>(!status||o.status===status)&&orderDateKeyBR(o)===date);
+  const dayTotal=list.filter(o=>o.status!=='cancelado').reduce((s,o)=>s+Number(o.total||0),0);
+  $('ordersArea').innerHTML=list.length?list.map(o=>{
+    const items=(o.order_items||[]).map(i=>`${Number(i.qty||0)}x ${esc(i.name)} - ${money(Number(i.qty||0)*Number(i.price||0))}`).join('<br>');
+    return `<div class="order-card">
+      <div>
+        <strong>Pedido #${esc(o.numero||String(o.id).slice(0,8))}</strong>
+        <div class="order-meta">${esc(formatDateBRFromOrder(o))} ${esc(formatTimeBRFromOrder(o))}<br>${esc(getOrderClienteNome(o)||'Cliente n�o informado')}${getOrderTelefone(o)?'<br>Tel: '+esc(getOrderTelefone(o)):''}</div>
+      </div>
+      <div>
+        <div class="order-meta">${renderEnderecoHtml(o)}</div>
+        <div class="items">${items||'Sem itens cadastrados'}</div>
+        <div class="order-meta">Pagamento: ${esc(o.pagamento||'')} · Taxa: ${money(o.taxa)} · Total: <b>${money(o.total)}</b></div>
+      </div>
+      <div>
+        <span class="badge ${esc(o.status||'novo')}">${statusLabel(o.status||'novo')}</span>
+        <div style="height:8px"></div>
+        ${statusActionButtons(o)}
+        <div style="height:8px"></div>
+        <button class="btn small blue" onclick="printOrderBT('${esc(o.id)}')">BT</button>
+        <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Navegador</button>
+      </div>
+    </div>`;
+  }).join(''):'<div class="notice">Nenhum pedido encontrado para esta data.</div>';
+  $('ordersArea').innerHTML=`<div class="notice">Exibindo ${list.length} pedido(s) de ${esc(date.split('-').reverse().join('/'))}. Total válido: <b>${money(dayTotal)}</b></div>`+$('ordersArea').innerHTML;
+}
+
+async function updateStatus(id,status){
+  const {error}=await db.from('orders').update({status}).eq('id',id);
+  if(error){alert('Erro ao atualizar status: '+error.message);return;}
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(o) o.status=status;
+  renderPedidosList();
+}
+
+function printOrder(id){
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(!o) return;
+  const items=(o.order_items||[]).map(i=>`<tr><td>${Number(i.qty||0)}x</td><td>${esc(i.name)}</td><td>${money(Number(i.qty||0)*Number(i.price||0))}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+  @page{size:58mm auto;margin:0}body{font-family:Arial,sans-serif;color:#000;width:58mm;padding:10px;font-size:15px}h1{text-align:center;font-size:24px;margin:0 0 8px;font-weight:900}p{margin:10px 0;line-height:1.6}td{border-bottom:1px dashed #999;padding:12px 2px;font-size:15px;vertical-align:top}td:last-child{text-align:right;font-weight:bold;white-space:nowrap}table{width:100%;border-collapse:collapse;margin:10px 0}.total{text-align:center;font-size:24px;font-weight:900;border:2px solid #000;padding:8px;margin-top:10px}
+  
+/* ===== MOBILE APP + TABELAS EM CARD ===== */
+@media(max-width:850px){
+  html,body{max-width:100%;overflow-x:hidden!important;-webkit-tap-highlight-color:transparent}
+  .app{grid-template-columns:1fr!important}
+  .sidebar{display:none!important}
+  .main{max-width:100%!important;width:100%!important;padding:12px!important;padding-bottom:96px!important}
+  .topbar{position:sticky!important;top:0!important;z-index:40!important;background:rgba(16,7,4,.96);padding:10px 0!important;margin-bottom:8px!important;backdrop-filter:blur(10px);flex-direction:column;gap:8px}
+  .topbar h1{font-size:21px!important}
+  .topbar p{font-size:12px!important}
+  .tabs-mobile{display:grid!important;grid-template-columns:repeat(6,auto);gap:6px!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;z-index:9997!important;background:#100704!important;border-top:1px solid var(--line)!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;margin:0!important;overflow-x:auto!important;scrollbar-width:none!important;box-shadow:0 -10px 30px rgba(0,0,0,.35)!important}
+  .tabs-mobile::-webkit-scrollbar{display:none!important}
+  .tabs-mobile button{min-width:84px!important;min-height:50px!important;white-space:normal!important;text-align:center!important;border-radius:14px!important;padding:7px 8px!important;font-size:11px!important;line-height:1.15!important;border:1px solid var(--line)!important;background:var(--panel)!important;color:var(--muted)!important}
+  .tabs-mobile button.active{background:linear-gradient(135deg,var(--brand),var(--brand2))!important;color:#160801!important}
+  .grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .card{border-radius:18px!important;padding:14px!important}
+  .order-card{grid-template-columns:1fr!important;padding:13px!important}
+  .form-grid{grid-template-columns:1fr!important}
+  .btn{min-height:46px;border-radius:14px}
+  .btn.small{min-height:38px;font-size:13px}
+  .input,.select,textarea{min-height:46px;font-size:16px}
+  .table-wrap{overflow:visible!important}
+  table{min-width:0!important;width:100%!important;display:block!important}
+  thead{display:none!important}
+  tbody{display:block!important;width:100%!important}
+  tr{display:block!important;width:100%!important;background:#160904;border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
+  td{display:block!important;width:100%!important;border-bottom:none!important;padding:6px 0!important;font-size:13px!important}
+  td .input{width:100%!important;max-width:100%!important}
+  td:nth-child(1)::before{content:"Nome";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px}
+  td:nth-child(2)::before{content:"Preço / Taxa";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px}
+  td:nth-child(3)::before{content:"Ativo";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:4px}
+  td:nth-child(4)::before{content:"Ações";display:block;color:var(--brand2);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:6px}
+  td .row{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;width:100%}
+  td .row .btn{width:100%;min-width:0}
+}
+@media(max-width:520px){.grid{grid-template-columns:1fr!important}}
+.install-fab{position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:9999;border:0;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#160801;font-weight:900;padding:14px 18px;box-shadow:0 14px 35px rgba(0,0,0,.45);display:block}
+.install-card{position:fixed;left:12px;right:12px;bottom:calc(148px + env(safe-area-inset-bottom));z-index:9998;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);display:none;font-size:15px;line-height:1.45}
+.install-card.show{display:block}.install-card strong{color:var(--brand2)}.install-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.push-status{display:none;position:fixed;left:12px;right:12px;bottom:calc(148px + env(safe-area-inset-bottom));z-index:9997;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);font-size:14px;line-height:1.45}
+.push-status.show{display:block}.push-status strong{display:block;color:var(--brand2);margin-bottom:4px}.push-status.ok{border-color:rgba(46,204,113,.45)}.push-status.warn{border-color:rgba(243,156,18,.45)}.push-status.err{border-color:rgba(231,76,60,.45)}
+.push-status{display:none;position:fixed;left:12px;right:12px;bottom:calc(148px + env(safe-area-inset-bottom));z-index:9997;background:#160904;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:14px;box-shadow:0 14px 38px rgba(0,0,0,.5);font-size:14px;line-height:1.45}
+.push-status.show{display:block}.push-status strong{display:block;color:var(--brand2);margin-bottom:4px}.push-status.ok{border-color:rgba(46,204,113,.45)}.push-status.warn{border-color:rgba(243,156,18,.45)}.push-status.err{border-color:rgba(231,76,60,.45)}
+
+
+/* ===== ALERTA DE NOVO PEDIDO ===== */
+.order-alert{
+  position:fixed;
+  left:12px;
+  right:12px;
+  top:calc(12px + env(safe-area-inset-top));
+  z-index:10000;
+  background:linear-gradient(135deg,#ff6b35,#ffb45c);
+  color:#160801;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);
+  display:none;
+  animation:alertPulse .8s infinite alternate;
+}
+.order-alert.show{display:block}
+.order-alert strong{font-size:18px;display:block;margin-bottom:4px}
+.order-alert .row{justify-content:space-between}
+@keyframes alertPulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.025)}
+}
+.alert-controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.alert-controls button{
+  flex:1;
+}
+
+
+/* ===== IMPRESSORA BLUETOOTH TERMICA ===== */
+.printer-panel{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
+}
+.printer-status{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
+
+</style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(formatDateBRFromOrder(o))} ${esc(formatTimeBRFromOrder(o))}</p><p><b>Cliente:</b> ${esc(getOrderClienteNome(o)||'')}</p>${getOrderTelefone(o)?`<p><b>Telefone:</b><br>${esc(getOrderTelefone(o))}</p>`:''}${renderEnderecoPrintHtml(o)}<table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
+  const w=window.open('','_blank','width=360,height=640');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
 }
 
 const PIZZA_PRICE_OPTIONS=[
-['preco_trad_media','Tradicional - Media'],['preco_trad_grande','Tradicional - Grande'],['preco_trad_gigante','Tradicional - Gigante'],['preco_trad_familia','Tradicional - Familia'],
-['preco_esp_media','Especial - Media'],['preco_esp_grande','Especial - Grande'],['preco_esp_gigante','Especial - Gigante'],['preco_esp_familia','Especial - Familia'],
-['preco_doce_media','Doce - Media'],['preco_doce_grande','Doce - Grande'],['preco_doce_gigante','Doce - Gigante'],['preco_doce_familia','Doce - Familia']
+  ['preco_trad_media','Tradicional - Media'],['preco_trad_grande','Tradicional - Grande'],['preco_trad_gigante','Tradicional - Gigante'],['preco_trad_familia','Tradicional - Familia'],
+  ['preco_esp_media','Especial - Media'],['preco_esp_grande','Especial - Grande'],['preco_esp_gigante','Especial - Gigante'],['preco_esp_familia','Especial - Familia'],
+  ['preco_doce_media','Doce - Media'],['preco_doce_grande','Doce - Grande'],['preco_doce_gigante','Doce - Gigante'],['preco_doce_familia','Doce - Familia']
 ];
 function pizzaPriceLabel(name){
-const found=PIZZA_PRICE_OPTIONS.find(([key])=>key===name);
-return found?found[1];
+  const found=PIZZA_PRICE_OPTIONS.find(([key])=>key===name);
+  return found?found[1]:name;
 }
 function renderProducts(category){
-const isBebida=category==='Bebida';
-if(!isBebida) return renderPizzaPrices();
-const list=products.filter(p=>p.category===category);
-$('content').innerHTML= <div class="card"> <div class="section-title"><h2>Bebidas</h2></div> <div class="form-grid"> <div class="field"><label>Nome</label><input class="input" id="prodName" placeholder="Refrigerante 2L"></div> <div class="field"><label>Preco</label><input class="input" id="prodPrice" type="number" step="0.01" placeholder="0.00"></div> </div> <button class="btn" onclick="addProduct('${category}')">Adicionar</button> </div> <div class="card table-wrap"> <table> <thead><tr><th>Nome</th><th>Preco</th><th>Ativo</th><th>Acoes</th></tr></thead> <tbody>${list.map(p=>
-
-
-${p.active===false?'Nao':'Sim'}
-
-Salvar
-${p.active===false?'Ativar':'Inativar'}
-
-).join('')}</tbody> </table> </div>;
+  const isBebida=category==='Bebida';
+  if(!isBebida) return renderPizzaPrices();
+  const list=products.filter(p=>p.category===category);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Bebidas</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input class="input" id="prodName" placeholder="Refrigerante 2L"></div>
+        <div class="field"><label>Preco</label><input class="input" id="prodPrice" type="number" step="0.01" placeholder="0.00"></div>
+      </div>
+      <button class="btn" onclick="addProduct('${category}')">Adicionar</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Nome</th><th>Preco</th><th>Ativo</th><th>Acoes</th></tr></thead>
+        <tbody>${list.map(p=>`<tr>
+          <td><input class="input" id="name-${esc(p.id)}" value="${esc(p.name)}"></td>
+          <td><input class="input" id="price-${esc(p.id)}" type="number" step="0.01" value="${Number(p.price||0)}"></td>
+          <td>${p.active===false?'Nao':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveProduct('${esc(p.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleProduct('${esc(p.id)}',${p.active===false?'true':'false'})">${p.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
 }
 
 function renderPizzaPrices(){
-const list=products.filter(p=>p.category==='Pizza Preco');
-const existing=new Set(list.map(p=>p.name));
-const missing=PIZZA_PRICE_OPTIONS.filter(([key])=>!existing.has(key));
-$('content').innerHTML= <div class="card"> <div class="section-title"><h2>Precos de Pizza</h2></div> <div class="notice">Esses valores alimentam automaticamente o cardapio do cliente. Altere o preco e clique em Salvar.</div> <div class="form-grid"> <div class="field"><label>Preco faltante</label><select class="select" id="pizzaPriceName" ${missing.length?'':'disabled'}>${missing.length?missing.map(([key,label])=>${label}).join(''):'<option>Todos cadastrados</option>'}</select></div> <div class="field"><label>Valor</label><input class="input" id="pizzaPriceValue" type="number" step="0.01" placeholder="0.00" ${missing.length?'':'disabled'}></div> </div> <button class="btn" onclick="addPizzaPrice()" ${missing.length?'':'disabled'}>Adicionar preco faltante</button> </div> <div class="card table-wrap"> <table> <thead><tr><th>Pizza / Tamanho</th><th>Preco</th><th>Ativo</th><th>Acoes</th></tr></thead> <tbody>${list.map(p=>
-${esc(pizzaPriceLabel(p.name))}${esc(p.name)}
-
-${p.active===false?'Nao':'Sim'}
-
-Salvar
-${p.active===false?'Ativar':'Inativar'}
-
-).join('')}</tbody> </table> </div>;
-$('content').innerHTML+=renderPizzaFlavorAdmin();
+  const list=products.filter(p=>p.category==='Pizza Preco');
+  const existing=new Set(list.map(p=>p.name));
+  const missing=PIZZA_PRICE_OPTIONS.filter(([key])=>!existing.has(key));
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Precos de Pizza</h2></div>
+      <div class="notice">Esses valores alimentam automaticamente o cardapio do cliente. Altere o preco e clique em Salvar.</div>
+      <div class="form-grid">
+        <div class="field"><label>Preco faltante</label><select class="select" id="pizzaPriceName" ${missing.length?'':'disabled'}>${missing.length?missing.map(([key,label])=>`<option value="${key}">${label}</option>`).join(''):'<option>Todos cadastrados</option>'}</select></div>
+        <div class="field"><label>Valor</label><input class="input" id="pizzaPriceValue" type="number" step="0.01" placeholder="0.00" ${missing.length?'':'disabled'}></div>
+      </div>
+      <button class="btn" onclick="addPizzaPrice()" ${missing.length?'':'disabled'}>Adicionar preco faltante</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Pizza / Tamanho</th><th>Preco</th><th>Ativo</th><th>Acoes</th></tr></thead>
+        <tbody>${list.map(p=>`<tr>
+          <td><strong>${esc(pizzaPriceLabel(p.name))}</strong><br><span class="muted">${esc(p.name)}</span><input type="hidden" id="name-${esc(p.id)}" value="${esc(p.name)}"></td>
+          <td><input class="input" id="price-${esc(p.id)}" type="number" step="0.01" value="${Number(p.price||0)}"></td>
+          <td>${p.active===false?'Nao':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveProduct('${esc(p.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleProduct('${esc(p.id)}',${p.active===false?'true':'false'})">${p.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  $('content').innerHTML+=renderPizzaFlavorAdmin();
 }
 
 async function addPizzaPrice(){
-const name=$('pizzaPriceName')?.value||'';
-const price=Number($('pizzaPriceValue')?.value||0);
-if(!name){alert('Selecione o preco.');return;}
-const {error}=await db.from('products').insert({name,price,category:'Pizza Preco',active});
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const name=$('pizzaPriceName')?.value||'';
+  const price=Number($('pizzaPriceValue')?.value||0);
+  if(!name){alert('Selecione o preco.');return;}
+  const {error}=await db.from('products').insert({name,price,category:'Pizza Preco',active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 function renderPizzaFlavorAdmin(){
-const groups=[
-['Pizza Tradicional','Tradicionais'],
-['Pizza Especial','Especiais'],
-['Pizza Doce','Doces']
-];
-return groups.map(([category,label])=>{
-const list=products.filter(p=>p.category===category);
-return <div class="card table-wrap"> <div class="section-title"><h2>Sabores ${label}</h2></div> <div class="form-grid"> <div class="field"><label>Nome do sabor</label><input class="input" id="flavorName-${category.replace(/\s+/g,'_')}" placeholder="Ex: Calabresa"></div> <div class="field"><label>Ingredientes</label><input class="input" id="flavorDesc-${category.replace(/\s+/g,'_')}" placeholder="Ex: Mussarela e calabresa"></div> </div> <button class="btn" onclick="addPizzaFlavor('${category.replace(/'/g,'&#39;')}')">Adicionar sabor</button> <table style="margin-top:14px"> <thead><tr><th>Sabor</th><th>Ingredientes</th><th>Ativo</th><th>Acoes</th></tr></thead> <tbody>${list.length?list.map(p=>
-
-
-${p.active===false?'Nao':'Sim'}
-
-Salvar
-${p.active===false?'Ativar':'Inativar'}
-
-).join(''):'<tr><td colspan="4" class="muted">Nenhum sabor cadastrado nesta categoria.</td></tr>'}</tbody> </table> </div>;
-}).join('');
+  const groups=[
+    ['Pizza Tradicional','Tradicionais'],
+    ['Pizza Especial','Especiais'],
+    ['Pizza Doce','Doces']
+  ];
+  return groups.map(([category,label])=>{
+    const list=products.filter(p=>p.category===category);
+    return `<div class="card table-wrap">
+      <div class="section-title"><h2>Sabores ${label}</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Nome do sabor</label><input class="input" id="flavorName-${category.replace(/\s+/g,'_')}" placeholder="Ex: Calabresa"></div>
+        <div class="field"><label>Ingredientes</label><input class="input" id="flavorDesc-${category.replace(/\s+/g,'_')}" placeholder="Ex: Mussarela e calabresa"></div>
+      </div>
+      <button class="btn" onclick="addPizzaFlavor('${category.replace(/'/g,'&#39;')}')">Adicionar sabor</button>
+      <table style="margin-top:14px">
+        <thead><tr><th>Sabor</th><th>Ingredientes</th><th>Ativo</th><th>Acoes</th></tr></thead>
+        <tbody>${list.length?list.map(p=>`<tr>
+          <td><input class="input" id="fname-${esc(p.id)}" value="${esc(p.name)}"></td>
+          <td><input class="input" id="fdesc-${esc(p.id)}" value="${esc(p.description||'')}"></td>
+          <td>${p.active===false?'Nao':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="savePizzaFlavor('${esc(p.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleProduct('${esc(p.id)}',${p.active===false?'true':'false'})">${p.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join(''):'<tr><td colspan="4" class="muted">Nenhum sabor cadastrado nesta categoria.</td></tr>'}</tbody>
+      </table>
+    </div>`;
+  }).join('');
 }
 
 async function addPizzaFlavor(category){
-const key=category.replace(/\s+/g,'_');
-const name=$('flavorName-'+key)?.value.trim()||'';
-const description=$('flavorDesc-'+key)?.value.trim()||'';
-if(!name){alert('Digite o nome do sabor.');return;}
-const {error}=await db.from('products').insert({name,description,price:0,category,active});
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const key=category.replace(/\s+/g,'_');
+  const name=$('flavorName-'+key)?.value.trim()||'';
+  const description=$('flavorDesc-'+key)?.value.trim()||'';
+  if(!name){alert('Digite o nome do sabor.');return;}
+  const {error}=await db.from('products').insert({name,description,price:0,category,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 async function savePizzaFlavor(id){
-const name=$('fname-'+id)?.value.trim()||'';
-const description=$('fdesc-'+id)?.value.trim()||'';
-if(!name){alert('Digite o nome do sabor.');return;}
-const {error}=await db.from('products').update({name,description,updated_at Date().toISOString()}).eq('id',id);
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const name=$('fname-'+id)?.value.trim()||'';
+  const description=$('fdesc-'+id)?.value.trim()||'';
+  if(!name){alert('Digite o nome do sabor.');return;}
+  const {error}=await db.from('products').update({name,description,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 async function addProduct(category){
-const name=$('prodName').value.trim();
-const price=Number($('prodPrice').value||0);
-if(!name){alert('Digite o nome.');return;}
-const {error}=await db.from('products').insert({name,price,category,active});
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const name=$('prodName').value.trim();
+  const price=Number($('prodPrice').value||0);
+  if(!name){alert('Digite o nome.');return;}
+  const {error}=await db.from('products').insert({name,price,category,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 async function saveProduct(id){
-const name=$('name-'+id).value.trim();
-const price=Number($('price-'+id).value||0);
-const {error}=await db.from('products').update({name,price,updated_at Date().toISOString()}).eq('id',id);
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const name=$('name-'+id).value.trim();
+  const price=Number($('price-'+id).value||0);
+  const {error}=await db.from('products').update({name,price,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 async function toggleProduct(id,active){
-const {error}=await db.from('products').update({active}).eq('id',id);
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const {error}=await db.from('products').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 function renderBairros(){
-$('content').innerHTML= <div class="card"> <div class="section-title"><h2>Novo bairro</h2></div> <div class="form-grid"> <div class="field"><label>Bairro</label><input class="input" id="bairroName" placeholder="Centro"></div> <div class="field"><label>Taxa</label><input class="input" id="bairroTaxa" type="number" step="0.01" placeholder="5.00"></div> </div> <button class="btn" onclick="addBairro()">Adicionar bairro</button> </div> <div class="card table-wrap"> <table> <thead><tr><th>Bairro</th><th>Taxa</th><th>Ativo</th><th>Ações</th></tr></thead> <tbody>${bairros.map(b=>
-
-
-${b.active===false?'Não':'Sim'}
-
-Salvar
-${b.active===false?'Ativar':'Inativar'}
-
-).join('')}</tbody> </table> </div>;
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Novo bairro</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Bairro</label><input class="input" id="bairroName" placeholder="Centro"></div>
+        <div class="field"><label>Taxa</label><input class="input" id="bairroTaxa" type="number" step="0.01" placeholder="5.00"></div>
+      </div>
+      <button class="btn" onclick="addBairro()">Adicionar bairro</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Bairro</th><th>Taxa</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${bairros.map(b=>`<tr>
+          <td><input class="input" id="bname-${esc(b.id)}" value="${esc(b.name)}"></td>
+          <td><input class="input" id="btaxa-${esc(b.id)}" type="number" step="0.01" value="${Number(b.taxa||0)}"></td>
+          <td>${b.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveBairro('${esc(b.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleBairro('${esc(b.id)}',${b.active===false?'true':'false'})">${b.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
 }
 
 async function addBairro(){
-const name=$('bairroName').value.trim();
-const taxa=Number($('bairroTaxa').value||0);
-if(!name){alert('Digite o bairro.');return;}
-const {error}=await db.from('bairros').insert({name,taxa,active});
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const name=$('bairroName').value.trim();
+  const taxa=Number($('bairroTaxa').value||0);
+  if(!name){alert('Digite o bairro.');return;}
+  const {error}=await db.from('bairros').insert({name,taxa,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 async function saveBairro(id){
-const name=$('bname-'+id).value.trim();
-const taxa=Number($('btaxa-'+id).value||0);
-const {error}=await db.from('bairros').update({name,taxa,updated_at Date().toISOString()}).eq('id',id);
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const name=$('bname-'+id).value.trim();
+  const taxa=Number($('btaxa-'+id).value||0);
+  const {error}=await db.from('bairros').update({name,taxa,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 async function toggleBairro(id,active){
-const {error}=await db.from('bairros').update({active}).eq('id',id);
-if(error){alert('Erro: '+error.message);return;}
-await loadAll();
+  const {error}=await db.from('bairros').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
 }
 
 function renderFuncionamento(){
-const days=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
-const closed=(settings.closed_days||[]).map(Number);
-$('content').innerHTML= <div class="card"> <div class="section-title"><h2>Status da loja</h2></div> <div class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></div> <button class="btn ${settings.manual_closed?'green':'red'}" onclick="toggleStore()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button> </div> <div class="card"> <div class="section-title"><h2>Horario de funcionamento</h2></div> <label class="notice" style="display:block;margin-bottom:12px"><input type="checkbox" id="useHours" ${settings.use_hours?'checked':''} onchange="saveHours()"> Usar horario automatico para abrir e fechar pedidos</label> <div class="form-grid"> <div class="field"><label>Abrir pedidos</label><input class="input" id="openTime" type="time" value="${esc(settings.open_time||'18:00')}" onchange="saveHours()"></div> <div class="field"><label>Fechar pedidos</label><input class="input" id="closeTime" type="time" value="${esc(settings.close_time||'23:59')}" onchange="saveHours()"></div> </div> <div class="notice">Quando ativado, o site aceita pedidos apenas dentro desse horario. Se passar da meia-noite, use um horario final menor que o inicial, exemplo 18:00 ate 01:00.</div> </div> <div class="card"> <div class="section-title"><h2>Dias sem funcionamento</h2></div> <div class="form-grid"> ${days.map((d,i)=><input class="closed-day" type="checkbox" value="${i}" ${closed.includes(i)?'checked':''} onchange="saveClosedDays()"> ${d}).join('')} </div> </div>;
+  const days=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  const closed=(settings.closed_days||[]).map(Number);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Status da loja</h2></div>
+      <div class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></div>
+      <button class="btn ${settings.manual_closed?'green':'red'}" onclick="toggleStore()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Horario de funcionamento</h2></div>
+      <label class="notice" style="display:block;margin-bottom:12px"><input type="checkbox" id="useHours" ${settings.use_hours?'checked':''} onchange="saveHours()"> Usar horario automatico para abrir e fechar pedidos</label>
+      <div class="form-grid">
+        <div class="field"><label>Abrir pedidos</label><input class="input" id="openTime" type="time" value="${esc(settings.open_time||'18:00')}" onchange="saveHours()"></div>
+        <div class="field"><label>Fechar pedidos</label><input class="input" id="closeTime" type="time" value="${esc(settings.close_time||'23:59')}" onchange="saveHours()"></div>
+      </div>
+      <div class="notice">Quando ativado, o site aceita pedidos apenas dentro desse horario. Se passar da meia-noite, use um horario final menor que o inicial, exemplo 18:00 ate 01:00.</div>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Dias sem funcionamento</h2></div>
+      <div class="form-grid">
+        ${days.map((d,i)=>`<label class="notice" style="margin:0"><input class="closed-day" type="checkbox" value="${i}" ${closed.includes(i)?'checked':''} onchange="saveClosedDays()"> ${d}</label>`).join('')}
+      </div>
+    </div>`;
 }
 async function saveSettings(){
-const {error}=await db.from('store_settings').upsert({key:'status',value,updated_at Date().toISOString()},{onConflict:'key'});
-if(error){alert('Erro: '+error.message);return;}
+  const {error}=await db.from('store_settings').upsert({key:'status',value:settings,updated_at:new Date().toISOString()},{onConflict:'key'});
+  if(error){alert('Erro: '+error.message);return;}
 }
 
 async function toggleStore(){
-settings.manual_closed=!settings.manual_closed;
-await saveSettings();
-renderFuncionamento();
+  settings.manual_closed=!settings.manual_closed;
+  await saveSettings();
+  renderFuncionamento();
 }
 
 async function saveClosedDays(){
-settings.closed_days=[...document.querySelectorAll('.closed-day')].map(i=>Number(i.value));
-await saveSettings();
+  settings.closed_days=[...document.querySelectorAll('.closed-day:checked')].map(i=>Number(i.value));
+  await saveSettings();
 }
 
 async function saveHours(){
-settings.use_hours=!!$('useHours')?.checked;
-settings.open_time=$('openTime')?.value||'18:00';
-settings.close_time=$('closeTime')?.value||'23:59';
-await saveSettings();
+  settings.use_hours=!!$('useHours')?.checked;
+  settings.open_time=$('openTime')?.value||'18:00';
+  settings.close_time=$('closeTime')?.value||'23:59';
+  await saveSettings();
 }
+
 
 
 
 // ===== IMPRESSORA TERMICA BLUETOOTH ESC/POS 58mm/80mm =====
 const PRINT_SERVICE_CANDIDATES=[
-'000018f0-0000-1000-8000-00805f9b34fb',
-'0000ffe0-0000-1000-8000-00805f9b34fb',
-'e7810a71-73ae-499d-8c15-faa9aef0c3f2'
+  '000018f0-0000-1000-8000-00805f9b34fb',
+  '0000ffe0-0000-1000-8000-00805f9b34fb',
+  'e7810a71-73ae-499d-8c15-faa9aef0c3f2'
 ];
 const PRINT_CHAR_CANDIDATES=[
-'00002af1-0000-1000-8000-00805f9b34fb',
-'0000ffe1-0000-1000-8000-00805f9b34fb',
-'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f'
+  '00002af1-0000-1000-8000-00805f9b34fb',
+  '0000ffe1-0000-1000-8000-00805f9b34fb',
+  'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f'
 ];
 
 let btDevice=null;
@@ -1352,223 +1294,233 @@ let btChar=null;
 let printerWidth=Number(localStorage.getItem('printer_width')||58);
 
 function setPrinterStatus(msg,type='wait'){
-const el=document.getElementById('printerStatus');
-if(!el)return;
-el.textContent=msg;
-el.className='printer-status '+type;
+  const el=document.getElementById('printerStatus');
+  if(!el)return;
+  el.textContent=msg;
+  el.className='printer-status '+type;
 }
 
 function renderPrinterPanel(){
-return <div class="printer-panel"> <button class="btn blue" onclick="connectThermalPrinter()">Conectar impressora Bluetooth</button> <button class="btn secondary" onclick="disconnectThermalPrinter()">Desconectar</button> <button class="btn secondary" onclick="testThermalPrinter()">Teste BT</button> <select class="select" style="width:auto" onchange="setPrinterWidth(this.value)"> <option value="58" ${printerWidth===58?'selected':''}>Bobina 58mm</option> <option value="80" ${printerWidth===80?'selected':''}>Bobina 80mm</option> </select> <div id="printerStatus" class="printer-status">Use Chrome/Edge no Android ou Windows. Primeiro pareie a impressora no Bluetooth do aparelho.</div> </div>;
+  return `
+    <div class="printer-panel">
+      <button class="btn blue" onclick="connectThermalPrinter()">Conectar impressora Bluetooth</button>
+      <button class="btn secondary" onclick="disconnectThermalPrinter()">Desconectar</button>
+      <button class="btn secondary" onclick="testThermalPrinter()">Teste BT</button>
+      <select class="select" style="width:auto" onchange="setPrinterWidth(this.value)">
+        <option value="58" ${printerWidth===58?'selected':''}>Bobina 58mm</option>
+        <option value="80" ${printerWidth===80?'selected':''}>Bobina 80mm</option>
+      </select>
+      <div id="printerStatus" class="printer-status">Use Chrome/Edge no Android ou Windows. Primeiro pareie a impressora no Bluetooth do aparelho.</div>
+    </div>`;
 }
 
 function setPrinterWidth(value){
-printerWidth=Number(value)||58;
-localStorage.setItem('printer_width',String(printerWidth));
-setPrinterStatus('Bobina '+printerWidth+'mm selecionada.','ok');
+  printerWidth=Number(value)||58;
+  localStorage.setItem('printer_width',String(printerWidth));
+  setPrinterStatus('Bobina '+printerWidth+'mm selecionada.','ok');
 }
 
 function lineWidth(){
-return printerWidth===80?48:32;
+  return printerWidth===80?48:32;
 }
 
 function textToBytes(text){
-const clean=String(text)
-.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-.replace(/[–—]/g,'-')
-.replace(/[“”]/g,'"')
-.replace(/[‘’]/g,"'");
-const bytes=new Uint8Array(clean.length);
-for(let i=0;i<clean.length;i++) bytes[i]=clean.charCodeAt(i)&0xff;
-return bytes;
+  const clean=String(text)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[–—]/g,'-')
+    .replace(/[“”]/g,'"')
+    .replace(/[‘’]/g,"'");
+  const bytes=new Uint8Array(clean.length);
+  for(let i=0;i<clean.length;i++) bytes[i]=clean.charCodeAt(i)&0xff;
+  return bytes;
 }
 
 function fitLeftRight(left,right){
-const w=lineWidth();
-left=String(left||'');
-right=String(right||'');
-const maxLeft=Math.max(1,w-right.length-1);
-if(left.length>maxLeft) left=left.slice(0,maxLeft-1)+'.';
-return left+' '.repeat(Math.max(1,w-left.length-right.length))+right;
+  const w=lineWidth();
+  left=String(left||'');
+  right=String(right||'');
+  const maxLeft=Math.max(1,w-right.length-1);
+  if(left.length>maxLeft) left=left.slice(0,maxLeft-1)+'.';
+  return left+' '.repeat(Math.max(1,w-left.length-right.length))+right;
 }
 
 function wrapText(text,indent=''){
-const w=lineWidth()-indent.length;
-const words=String(text||'').split(/\s+/);
-const lines=[];
-let line='';
-words.forEach(word=>{
-if((line+' '+word).trim().length>w){
-if(line) lines.push(indent+line);
-line=word;
-}else{
-line=(line+' '+word).trim();
-}
-});
-if(line) lines.push(indent+line);
-return lines.join('\n');
+  const w=lineWidth()-indent.length;
+  const words=String(text||'').split(/\s+/);
+  const lines=[];
+  let line='';
+  words.forEach(word=>{
+    if((line+' '+word).trim().length>w){
+      if(line) lines.push(indent+line);
+      line=word;
+    }else{
+      line=(line+' '+word).trim();
+    }
+  });
+  if(line) lines.push(indent+line);
+  return lines.join('\n');
 }
 
 function moneyPlain(v){
-return 'R$ '+Number(v||0).toFixed(2).replace('.',',');
+  return 'R$ '+Number(v||0).toFixed(2).replace('.',',');
 }
 
 function buildEscPosOrder(order){
-const ESC='\x1b';
-const GS='\x1d';
-const INIT=ESC+'@';
-const BOLD_ON=ESC+'E\x01';
-const BOLD_OFF=ESC+'E\x00';
-const CENTER=ESC+'a\x01';
-const LEFT=ESC+'a\x00';
-const NORMAL=GS+'!\x00';
-const TALL=GS+'!\x01';
-const DOUBLE=GS+'!\x11';
-const CUT=GS+'V\x41\x03';
-const LINE='-'.repeat(lineWidth());
-const items=order.order_items||[];
+  const ESC='\x1b';
+  const GS='\x1d';
+  const INIT=ESC+'@';
+  const BOLD_ON=ESC+'E\x01';
+  const BOLD_OFF=ESC+'E\x00';
+  const CENTER=ESC+'a\x01';
+  const LEFT=ESC+'a\x00';
+  const NORMAL=GS+'!\x00';
+  const TALL=GS+'!\x01';
+  const DOUBLE=GS+'!\x11';
+  const CUT=GS+'V\x41\x03';
+  const LINE='-'.repeat(lineWidth());
+  const items=order.order_items||[];
 
-let out='';
-out+=INIT;
-out+=CENTER+BOLD_ON+DOUBLE+'LA CASA\n'+NORMAL;
-out+=CENTER+BOLD_ON+DOUBLE+'DA PIZZA\n'+NORMAL+BOLD_OFF;
-out+=CENTER+LINE+'\n';
-out+=CENTER+BOLD_ON+DOUBLE+'#'+(order.numero||String(order.id).slice(0,8))+'\n'+NORMAL+BOLD_OFF;
-out+=CENTER+formatDateBRFromOrder(order)+' '+formatTimeBRFromOrder(order)+'\n';
-out+='\n'+LEFT+BOLD_ON+TALL+'CLIENTE\n'+NORMAL+BOLD_OFF;
-out+=wrapText(getOrderClienteNome(order)||'Nao informado')+'\n';
-if(getOrderTelefone(order)) out+=wrapText('Telefone: '+getOrderTelefone(order))+'\n';
-out+='\n';
-out+=BOLD_ON+TALL+'ENDERECO\n'+NORMAL+BOLD_OFF;
-out+=wrapText(renderEnderecoTexto(order))+'\n\n\n';
-out+=LINE+'\n';
-out+=CENTER+BOLD_ON+TALL+'ITENS DO PEDIDO\n'+NORMAL+BOLD_OFF;
-out+=LINE+'\n';
+  let out='';
+  out+=INIT;
+  out+=CENTER+BOLD_ON+DOUBLE+'LA CASA\n'+NORMAL;
+  out+=CENTER+BOLD_ON+DOUBLE+'DA PIZZA\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+LINE+'\n';
+  out+=CENTER+BOLD_ON+DOUBLE+'#'+(order.numero||String(order.id).slice(0,8))+'\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+formatDateBRFromOrder(order)+'  '+formatTimeBRFromOrder(order)+'\n';
+  out+='\n'+LEFT+BOLD_ON+TALL+'CLIENTE\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(getOrderClienteNome(order)||'Nao informado')+'\n';
+  if(getOrderTelefone(order)) out+=wrapText('Telefone: '+getOrderTelefone(order))+'\n';
+  out+='\n';
+  out+=BOLD_ON+TALL+'ENDERECO\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(renderEnderecoTexto(order))+'\n\n\n';
+  out+=LINE+'\n';
+  out+=CENTER+BOLD_ON+TALL+'ITENS DO PEDIDO\n'+NORMAL+BOLD_OFF;
+  out+=LINE+'\n';
 
-items.forEach((i,idx)=>{
-const qty=Number(i.qty||0);
-const price=Number(i.price||0);
-out+=BOLD_ON+TALL+(idx+1)+') '+qty+'x\n'+NORMAL+BOLD_OFF;
-out+=BOLD_ON+wrapText(i.name||'Item')+'\n'+BOLD_OFF;
-out+=fitLeftRight('Unit: '+moneyPlain(price),moneyPlain(qty*price))+'\n\n\n';
-});
+  items.forEach((i,idx)=>{
+    const qty=Number(i.qty||0);
+    const price=Number(i.price||0);
+    out+=BOLD_ON+TALL+(idx+1)+') '+qty+'x\n'+NORMAL+BOLD_OFF;
+    out+=BOLD_ON+wrapText(i.name||'Item')+'\n'+BOLD_OFF;
+    out+=fitLeftRight('Unit: '+moneyPlain(price),moneyPlain(qty*price))+'\n\n\n';
+  });
 
-out+=LINE+'\n';
-out+=BOLD_ON+TALL+fitLeftRight('Taxa',moneyPlain(order.taxa))+'\n'+NORMAL+BOLD_OFF;
-out+=BOLD_ON+DOUBLE+fitLeftRight('TOTAL',moneyPlain(order.total))+'\n'+NORMAL+BOLD_OFF;
-out+=LINE+'\n\n';
-out+=BOLD_ON+TALL+'PAGAMENTO\n'+NORMAL+BOLD_OFF;
-out+=wrapText(order.pagamento||'Nao informado')+'\n';
-if(order.troco) out+='Troco: '+order.troco+'\n';
-if(order.obs) out+='\n'+BOLD_ON+'OBS\n'+BOLD_OFF+wrapText(order.obs)+'\n';
-out+='\n'+LINE+'\n';
-out+=CENTER+BOLD_ON+'OBRIGADO!\n'+BOLD_OFF;
-out+=CENTER+'Volte sempre\n';
-out+=LINE+'\n';
-out+='\n\n\n\n\n\n\n';
-out+=CUT;
-return textToBytes(out);
+  out+=LINE+'\n';
+  out+=BOLD_ON+TALL+fitLeftRight('Taxa',moneyPlain(order.taxa))+'\n'+NORMAL+BOLD_OFF;
+  out+=BOLD_ON+DOUBLE+fitLeftRight('TOTAL',moneyPlain(order.total))+'\n'+NORMAL+BOLD_OFF;
+  out+=LINE+'\n\n';
+  out+=BOLD_ON+TALL+'PAGAMENTO\n'+NORMAL+BOLD_OFF;
+  out+=wrapText(order.pagamento||'Nao informado')+'\n';
+  if(order.troco) out+='Troco: '+order.troco+'\n';
+  if(order.obs) out+='\n'+BOLD_ON+'OBS\n'+BOLD_OFF+wrapText(order.obs)+'\n';
+  out+='\n'+LINE+'\n';
+  out+=CENTER+BOLD_ON+'OBRIGADO!\n'+BOLD_OFF;
+  out+=CENTER+'Volte sempre\n';
+  out+=LINE+'\n';
+  out+='\n\n\n\n\n\n\n';
+  out+=CUT;
+  return textToBytes(out);
 }
 
 async function findWritableCharacteristic(server){
-for(const serviceUuid of PRINT_SERVICE_CANDIDATES){
-try{
-const service=await server.getPrimaryService(serviceUuid);
-for(const charUuid of PRINT_CHAR_CANDIDATES){
-try{
-return await service.getCharacteristic(charUuid);
-}catch(e){}
-}
-const chars=await service.getCharacteristics();
-const writable=chars.find(c=>c.properties.write||c.properties.writeWithoutResponse);
-if(writable) return writable;
-}catch(e){}
-}
-throw new Error('Não achei o serviço de impressão. Tente parear a impressora no Bluetooth do sistema e conectar de novo.');
+  for(const serviceUuid of PRINT_SERVICE_CANDIDATES){
+    try{
+      const service=await server.getPrimaryService(serviceUuid);
+      for(const charUuid of PRINT_CHAR_CANDIDATES){
+        try{
+          return await service.getCharacteristic(charUuid);
+        }catch(e){}
+      }
+      const chars=await service.getCharacteristics();
+      const writable=chars.find(c=>c.properties.write||c.properties.writeWithoutResponse);
+      if(writable) return writable;
+    }catch(e){}
+  }
+  throw new Error('Não achei o serviço de impressão. Tente parear a impressora no Bluetooth do sistema e conectar de novo.');
 }
 
 async function connectThermalPrinter(){
-if(!navigator.bluetooth){
-setPrinterStatus('Web Bluetooth não suportado. Use Chrome/Edge no Android ou Windows.','err');
-return;
-}
-try{
-setPrinterStatus('Abrindo lista de dispositivos...','wait');
-btDevice=await navigator.bluetooth.requestDevice({
-acceptAllDevices,
-optionalServices
-});
-setPrinterStatus('Conectando em '+(btDevice.name||'impressora')+'...','wait');
-const server=await btDevice.gatt.connect();
-btChar=await findWritableCharacteristic(server);
-btDevice.addEventListener('gattserverdisconnected',()=>{
-btChar=null;
-setPrinterStatus('Impressora desconectada.','err');
-});
-setPrinterStatus('Conectada: '+(btDevice.name||'impressora térmica')+'. Agora use o botão BT no pedido.','ok');
-}catch(e){
-btChar=null;
-setPrinterStatus('Erro ao conectar: '+(e.message||e),'err');
-}
+  if(!navigator.bluetooth){
+    setPrinterStatus('Web Bluetooth não suportado. Use Chrome/Edge no Android ou Windows.','err');
+    return;
+  }
+  try{
+    setPrinterStatus('Abrindo lista de dispositivos...','wait');
+    btDevice=await navigator.bluetooth.requestDevice({
+      acceptAllDevices:true,
+      optionalServices:PRINT_SERVICE_CANDIDATES
+    });
+    setPrinterStatus('Conectando em '+(btDevice.name||'impressora')+'...','wait');
+    const server=await btDevice.gatt.connect();
+    btChar=await findWritableCharacteristic(server);
+    btDevice.addEventListener('gattserverdisconnected',()=>{
+      btChar=null;
+      setPrinterStatus('Impressora desconectada.','err');
+    });
+    setPrinterStatus('Conectada: '+(btDevice.name||'impressora térmica')+'. Agora use o botão BT no pedido.','ok');
+  }catch(e){
+    btChar=null;
+    setPrinterStatus('Erro ao conectar: '+(e.message||e),'err');
+  }
 }
 
 function disconnectThermalPrinter(){
-try{if(btDevice?.gatt?.connected)btDevice.gatt.disconnect();}catch(e){}
-btDevice=null;
-btChar=null;
-setPrinterStatus('Desconectada.','wait');
+  try{if(btDevice?.gatt?.connected)btDevice.gatt.disconnect();}catch(e){}
+  btDevice=null;
+  btChar=null;
+  setPrinterStatus('Desconectada.','wait');
 }
 
 async function writePrinterBytes(bytes){
-if(!btChar) throw new Error('Impressora não conectada.');
-const chunk=160;
-for(let i=0;i<bytes.length;i+=chunk){
-const part=bytes.slice(i,i+chunk);
-if(btChar.properties.writeWithoutResponse && btChar.writeValueWithoutResponse){
-await btChar.writeValueWithoutResponse(part);
-}else{
-await btChar.writeValue(part);
-}
-await new Promise(r=>setTimeout(r,80));
-}
+  if(!btChar) throw new Error('Impressora não conectada.');
+  const chunk=160;
+  for(let i=0;i<bytes.length;i+=chunk){
+    const part=bytes.slice(i,i+chunk);
+    if(btChar.properties.writeWithoutResponse && btChar.writeValueWithoutResponse){
+      await btChar.writeValueWithoutResponse(part);
+    }else{
+      await btChar.writeValue(part);
+    }
+    await new Promise(r=>setTimeout(r,80));
+  }
 }
 
 async function printOrderBT(id){
-const order=orders.find(x=>String(x.id)===String(id));
-if(!order) return;
-try{
-setPrinterStatus('Imprimindo pedido #'+(order.numero||'')+'...','wait');
-await writePrinterBytes(buildEscPosOrder(order));
-setPrinterStatus('Pedido impresso com sucesso.','ok');
-}catch(e){
-setPrinterStatus('Erro ao imprimir: '+(e.message||e),'err');
-}
+  const order=orders.find(x=>String(x.id)===String(id));
+  if(!order) return;
+  try{
+    setPrinterStatus('Imprimindo pedido #'+(order.numero||'')+'...','wait');
+    await writePrinterBytes(buildEscPosOrder(order));
+    setPrinterStatus('Pedido impresso com sucesso.','ok');
+  }catch(e){
+    setPrinterStatus('Erro ao imprimir: '+(e.message||e),'err');
+  }
 }
 
 async function testThermalPrinter(){
-const fake={
-id:'teste',
-numero:'TESTE',
-cliente:'Cliente Teste',
-rua:'Rua Teste',
-numero_endereco:'123',
-bairro:'Centro',
-complemento:'Casa',
-referencia:'Perto da praça',
-data Date().toISOString().slice(0,10),
-hora Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
-pagamento:'pix',
-taxa:5,
-total:53,
-order_items:[{qty:1,name:'Pizza Calabresa Grande',price:48}]
-};
-try{
-setPrinterStatus('Enviando teste...','wait');
-await writePrinterBytes(buildEscPosOrder(fake));
-setPrinterStatus('Teste enviado com sucesso.','ok');
-}catch(e){
-setPrinterStatus('Erro no teste: '+(e.message||e),'err');
-}
+  const fake={
+    id:'teste',
+    numero:'TESTE',
+    cliente:'Cliente Teste',
+    rua:'Rua Teste',
+    numero_endereco:'123',
+    bairro:'Centro',
+    complemento:'Casa',
+    referencia:'Perto da praça',
+    data:new Date().toISOString().slice(0,10),
+    hora:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    pagamento:'pix',
+    taxa:5,
+    total:53,
+    order_items:[{qty:1,name:'Pizza Calabresa Grande',price:48}]
+  };
+  try{
+    setPrinterStatus('Enviando teste...','wait');
+    await writePrinterBytes(buildEscPosOrder(fake));
+    setPrinterStatus('Teste enviado com sucesso.','ok');
+  }catch(e){
+    setPrinterStatus('Erro no teste: '+(e.message||e),'err');
+  }
 }
 
 // ===== INSTALACAO PWA =====
@@ -1578,94 +1530,95 @@ function isStandaloneMode(){return window.matchMedia('(display-mode: standalone)
 function hideInstallCard(){const card=document.getElementById('installCard');if(card)card.classList.remove('show')}
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;const btn=document.getElementById('installBtn');if(btn)btn.style.display='block'})
 async function installApp(){
-const card=document.getElementById('installCard');
-const text=document.getElementById('installText');
-if(isStandaloneMode()){if(text)text.innerHTML='O painel já está instalado como app neste aparelho.';if(card)card.classList.add('show');return}
-if(isIosDevice()){if(text)text.innerHTML='No iPhone/iPad, abra no Safari, toque em Compartilhar e escolha Adicionar à Tela de Início.';if(card)card.classList.add('show');return}
-if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;return}
-if(text)text.innerHTML='No Android, abra no Chrome, toque nos 3 pontinhos e escolha Instalar app ou Adicionar à tela inicial.';
-if(card)card.classList.add('show');
+  const card=document.getElementById('installCard');
+  const text=document.getElementById('installText');
+  if(isStandaloneMode()){if(text)text.innerHTML='O painel já está instalado como app neste aparelho.';if(card)card.classList.add('show');return}
+  if(isIosDevice()){if(text)text.innerHTML='No iPhone/iPad, abra no <b>Safari</b>, toque em <b>Compartilhar</b> e escolha <b>Adicionar à Tela de Início</b>.';if(card)card.classList.add('show');return}
+  if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;return}
+  if(text)text.innerHTML='No Android, abra no <b>Chrome</b>, toque nos <b>3 pontinhos</b> e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.';
+  if(card)card.classList.add('show');
 }
 function showPushStatus(type,title,message){
-const box=document.getElementById('pushStatus');
-if(!box) return;
-box.className='push-status show '+(type||'');
-box.innerHTML=<strong>${title||'Notifica��es'}</strong><span>${message||''}</span><div class="install-actions"><button class="btn small secondary" onclick="hidePushStatus()">Fechar</button></div>;
-setTimeout(()=>hidePushStatus(),14000);
+  const box=document.getElementById('pushStatus');
+  if(!box) return;
+  box.className='push-status show '+(type||'');
+  box.innerHTML=`<strong>${title||'Notifica��es'}</strong><span>${message||''}</span><div class="install-actions"><button class="btn small secondary" onclick="hidePushStatus()">Fechar</button></div>`;
+  setTimeout(()=>hidePushStatus(),14000);
 }
 function hidePushStatus(){const box=document.getElementById('pushStatus');if(box)box.classList.remove('show')}
 function isPushKeyConfigured(){return WEB_PUSH_PUBLIC_KEY&&WEB_PUSH_PUBLIC_KEY!=='COLOQUE_SUA_CHAVE_PUBLICA_VAPID_AQUI'}
 function urlBase64ToUint8Array(base64String){
-const padding='='.repeat((4-base64String.length%4)%4);
-const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
-const rawData=atob(base64);
-const outputArray=new Uint8Array(rawData.length);
-for(let i=0;i<rawData.length;i++) outputArray[i]=rawData.charCodeAt(i);
-return outputArray;
+  const padding='='.repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  const rawData=atob(base64);
+  const outputArray=new Uint8Array(rawData.length);
+  for(let i=0;i<rawData.length;i++) outputArray[i]=rawData.charCodeAt(i);
+  return outputArray;
 }
 async function getAdminServiceWorkerRegistration(){
-if(!('serviceWorker' in navigator)) throw new Error('Este navegador n�o suporta service worker.');
-if(adminServiceWorkerRegistration) return adminServiceWorkerRegistration;
-adminServiceWorkerRegistration=await navigator.serviceWorker.register('./sw.js');
-return adminServiceWorkerRegistration;
+  if(!('serviceWorker' in navigator)) throw new Error('Este navegador n�o suporta service worker.');
+  if(adminServiceWorkerRegistration) return adminServiceWorkerRegistration;
+  adminServiceWorkerRegistration=await navigator.serviceWorker.register('./sw.js');
+  return adminServiceWorkerRegistration;
 }
 async function updatePushButton(){
-const btn=document.getElementById('pushBtn');
-if(!btn) return;
-if(!('Notification' in window)||!('PushManager' in window)){btn.textContent='Push indispon�vel';btn.disabled=true;return;}
-if(!isPushKeyConfigured()){btn.textContent='Configurar push';btn.disabled=false;return;}
-try{
-const reg=await getAdminServiceWorkerRegistration();
-const sub=await reg.pushManager.getSubscription();
-if(sub){btn.textContent='Notifica��es ativas';btn.disabled=false;return;}
-}catch(e){}
-btn.textContent=Notification.permission==='granted'?'Ativar notifica��es':'Permitir notifica��es';
-btn.disabled=false;
+  const btn=document.getElementById('pushBtn');
+  if(!btn) return;
+  if(!('Notification' in window)||!('PushManager' in window)){btn.textContent='Push indispon�vel';btn.disabled=true;return;}
+  if(!isPushKeyConfigured()){btn.textContent='Configurar push';btn.disabled=false;return;}
+  try{
+    const reg=await getAdminServiceWorkerRegistration();
+    const sub=await reg.pushManager.getSubscription();
+    if(sub){btn.textContent='Notifica��es ativas';btn.disabled=false;return;}
+  }catch(e){}
+  btn.textContent=Notification.permission==='granted'?'Ativar notifica��es':'Permitir notifica��es';
+  btn.disabled=false;
 }
 async function enablePushNotifications(){
-const btn=document.getElementById('pushBtn');
-try{
-if(!('Notification' in window)||!('PushManager' in window)){
-showPushStatus('err','Push indispon�vel','Este navegador n�o permite notifica��o push web.');
-return;
-}
-if(!isPushKeyConfigured()){
-showPushStatus('warn','Falta configurar a chave VAPID','Gere as chaves Web Push e coloque a chave p�blica em WEB_PUSH_PUBLIC_KEY no admin.html. Depois uma Edge Function dispara para os dispositivos salvos.');
-return;
-}
-if(btn){btn.disabled=true;btn.textContent='Ativando...';}
-const permission=await Notification.requestPermission();
-if(permission!=='granted'){
-showPushStatus('warn','Permiss�o n�o liberada','O aparelho precisa permitir notifica��es para receber aviso com tela apagada.');
-return;
-}
-const reg=await getAdminServiceWorkerRegistration();
-let sub=await reg.pushManager.getSubscription();
-if(!sub){
-sub=await reg.pushManager.subscribe({userVisibleOnly,applicationServerKey(WEB_PUSH_PUBLIC_KEY)});
-}
-const json=sub.toJSON();
-const {error}=await db.from('admin_devices').upsert({
-endpoint.endpoint,
-p256dh.keys?.p256dh||'',
-auth.keys?.auth||'',
-admin_email?.user?.email||'',
-user_agent.userAgent,
-active,
-updated_at Date().toISOString()
-},{onConflict:'endpoint'});
-if(error) throw error;
-showPushStatus('ok','Notifica��es ativadas','Este aparelho foi salvo no Supabase. Quando a fun��o de envio estiver ligada, novos pedidos poder�o aparecer mesmo com a tela bloqueada.');
-try{await reg.showNotification('La Casa Admin',{body:'Notifica��es ativadas neste aparelho.',tag:'push-ready',icon:'./icon-192.png',badge:'./icon-192.png'});}catch(e){}
-}catch(e){
-console.error(e);
-showPushStatus('err','Erro ao ativar notifica��es',e.message||String(e));
-}finally{
-if(btn) btn.disabled=false;
-updatePushButton();
-}
+  const btn=document.getElementById('pushBtn');
+  try{
+    if(!('Notification' in window)||!('PushManager' in window)){
+      showPushStatus('err','Push indispon�vel','Este navegador n�o permite notifica��o push web.');
+      return;
+    }
+    if(!isPushKeyConfigured()){
+      showPushStatus('warn','Falta configurar a chave VAPID','Gere as chaves Web Push e coloque a chave p�blica em WEB_PUSH_PUBLIC_KEY no admin.html. Depois uma Edge Function dispara para os dispositivos salvos.');
+      return;
+    }
+    if(btn){btn.disabled=true;btn.textContent='Ativando...';}
+    const permission=await Notification.requestPermission();
+    if(permission!=='granted'){
+      showPushStatus('warn','Permiss�o n�o liberada','O aparelho precisa permitir notifica��es para receber aviso com tela apagada.');
+      return;
+    }
+    const reg=await getAdminServiceWorkerRegistration();
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub){
+      sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(WEB_PUSH_PUBLIC_KEY)});
+    }
+    const json=sub.toJSON();
+    const {error}=await db.from('admin_devices').upsert({
+      endpoint:json.endpoint,
+      p256dh:json.keys?.p256dh||'',
+      auth:json.keys?.auth||'',
+      admin_email:session?.user?.email||'',
+      user_agent:navigator.userAgent,
+      active:true,
+      updated_at:new Date().toISOString()
+    },{onConflict:'endpoint'});
+    if(error) throw error;
+    showPushStatus('ok','Notifica��es ativadas','Este aparelho foi salvo no Supabase. Quando a fun��o de envio estiver ligada, novos pedidos poder�o aparecer mesmo com a tela bloqueada.');
+    try{await reg.showNotification('La Casa Admin',{body:'Notifica��es ativadas neste aparelho.',tag:'push-ready',icon:'./icon-192.png',badge:'./icon-192.png'});}catch(e){}
+  }catch(e){
+    console.error(e);
+    showPushStatus('err','Erro ao ativar notifica��es',e.message||String(e));
+  }finally{
+    if(btn) btn.disabled=false;
+    updatePushButton();
+  }
 }
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{getAdminServiceWorkerRegistration().then(updatePushButton).catch(()=>{})})}
+
 
 // ===== ALERTA SONORO E VISUAL DE NOVO PEDIDO =====
 let lastKnownOrderId=null;
@@ -1673,135 +1626,138 @@ let realtimeChannel=null;
 let alertUnlocked=false;
 
 function unlockAlertSound(){
-alertUnlocked=true;
-try{
-const ctx=new (window.AudioContext||window.webkitAudioContext)();
-const osc=ctx.createOscillator();
-const gain=ctx.createGain();
-osc.connect(gain);
-gain.connect(ctx.destination);
-gain.gain.value=0.001;
-osc.start();
-osc.stop(ctx.currentTime+0.02);
-}catch(e){}
+  alertUnlocked=true;
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    gain.gain.value=0.001;
+    osc.start();
+    osc.stop(ctx.currentTime+0.02);
+  }catch(e){}
 }
 
-document.addEventListener('click',unlockAlertSound,{once});
-document.addEventListener('touchstart',unlockAlertSound,{once});
+document.addEventListener('click',unlockAlertSound,{once:true});
+document.addEventListener('touchstart',unlockAlertSound,{once:true});
 
 function playNewOrderSound(){
-try{
-const AudioContextClass=window.AudioContext||window.webkitAudioContext;
-if(!AudioContextClass) return;
-const ctx=new AudioContextClass();
-const notes=[880,1046,1318,1046,1318];
-notes.forEach((freq,index)=>{
-const osc=ctx.createOscillator();
-const gain=ctx.createGain();
-osc.type='sine';
-osc.frequency.value=freq;
-osc.connect(gain);
-gain.connect(ctx.destination);
-const start=ctx.currentTime+(index*0.18);
-gain.gain.setValueAtTime(0.0001,start);
-gain.gain.exponentialRampToValueAtTime(0.35,start+0.03);
-gain.gain.exponentialRampToValueAtTime(0.0001,start+0.16);
-osc.start(start);
-osc.stop(start+0.18);
-});
-}catch(e){}
+  try{
+    const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+    if(!AudioContextClass) return;
+    const ctx=new AudioContextClass();
+    const notes=[880,1046,1318,1046,1318];
+    notes.forEach((freq,index)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.value=freq;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const start=ctx.currentTime+(index*0.18);
+      gain.gain.setValueAtTime(0.0001,start);
+      gain.gain.exponentialRampToValueAtTime(0.35,start+0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001,start+0.16);
+      osc.start(start);
+      osc.stop(start+0.18);
+    });
+  }catch(e){}
 }
 
 function vibrateNewOrder(){
-try{
-if(navigator.vibrate) navigator.vibrate([350,150,350,150,500]);
-}catch(e){}
+  try{
+    if(navigator.vibrate) navigator.vibrate([350,150,350,150,500]);
+  }catch(e){}
 }
 
 function showOrderAlert(order){
-const box=document.getElementById('orderAlert');
-const text=document.getElementById('orderAlertText');
-if(text){
-const numero=order?.numero ? '#'+order.numero : '';
-const total=order?.total ? money(order.total) : '';
-text.textContent=Pedido ${numero} ${total} recebido. Verifique a aba Pedidos.;
-}
-if(box) box.classList.add('show');
-playNewOrderSound();
-vibrateNewOrder();
+  const box=document.getElementById('orderAlert');
+  const text=document.getElementById('orderAlertText');
+  if(text){
+    const numero=order?.numero ? '#'+order.numero : '';
+    const total=order?.total ? money(order.total) : '';
+    text.textContent=`Pedido ${numero} ${total} recebido. Verifique a aba Pedidos.`;
+  }
+  if(box) box.classList.add('show');
+  playNewOrderSound();
+  vibrateNewOrder();
 
-setTimeout(()=>hideOrderAlert(),30000);
+  setTimeout(()=>hideOrderAlert(),30000);
 }
 
 function hideOrderAlert(){
-const box=document.getElementById('orderAlert');
-if(box) box.classList.remove('show');
+  const box=document.getElementById('orderAlert');
+  if(box) box.classList.remove('show');
 }
 
 function rememberLatestOrder(){
-if(orders && orders.length){
-lastKnownOrderId=String(orders[0].id);
-}
+  if(orders && orders.length){
+    lastKnownOrderId=String(orders[0].id);
+  }
 }
 
 async function checkNewOrdersByPolling(){
-if(!session) return;
-try{
-const {data,error}=await db
-.from('orders')
-.select('id,numero,total,status,created_at')
-.order('created_at',{ascending})
-.limit(1);
+  if(!session) return;
+  try{
+    const {data,error}=await db
+      .from('orders')
+      .select('id,numero,total,status,created_at')
+      .order('created_at',{ascending:false})
+      .limit(1);
 
-if(error || !data || !data.length) return;
+    if(error || !data || !data.length) return;
 
-const newest=data[0];
-if(lastKnownOrderId && String(newest.id)!==String(lastKnownOrderId)){
-  lastKnownOrderId=String(newest.id);
-  await loadAll();
-  showOrderAlert(newest);
-}else if(!lastKnownOrderId){
-  lastKnownOrderId=String(newest.id);
-}
-}catch(e){
-console.warn('Falha ao verificar novos pedidos',e);
-}
+    const newest=data[0];
+    if(lastKnownOrderId && String(newest.id)!==String(lastKnownOrderId)){
+      lastKnownOrderId=String(newest.id);
+      await loadAll();
+      showOrderAlert(newest);
+    }else if(!lastKnownOrderId){
+      lastKnownOrderId=String(newest.id);
+    }
+  }catch(e){
+    console.warn('Falha ao verificar novos pedidos',e);
+  }
 }
 
 function startOrderRealtime(){
-if(realtimeChannel) return;
-try{
-realtimeChannel=db
-.channel('admin-new-orders-alert')
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},async payload=>{
-const order=payload.new;
-lastKnownOrderId=String(order.id);
-await loadAll();
-showOrderAlert(order);
-})
-.subscribe();
-}catch(e){
-console.warn('Realtime indisponivel, usando verificacao automatica.',e);
-}
+  if(realtimeChannel) return;
+  try{
+    realtimeChannel=db
+      .channel('admin-new-orders-alert')
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},async payload=>{
+        const order=payload.new;
+        lastKnownOrderId=String(order.id);
+        await loadAll();
+        showOrderAlert(order);
+      })
+      .subscribe();
+  }catch(e){
+    console.warn('Realtime indisponivel, usando verificacao automatica.',e);
+  }
 }
 
 setInterval(checkNewOrdersByPolling,10000);
 setInterval(()=>{
-if(session&&isAdminLoginExpired()){
-requireFreshLogin('Sessão expirada. Entre novamente para continuar.');
-}
+  if(session&&isAdminLoginExpired()){
+    requireFreshLogin('Sessão expirada. Entre novamente para continuar.');
+  }
 },60000);
 
 async function init(){
-const {data}=await db.auth.getSession();
-session=data.session;
-if(session&&isAdminLoginExpired()){
-await requireFreshLogin('Sessão expirada. Entre novamente para continuar.');
-return;
-}
-if(session) await start();
+  const {data}=await db.auth.getSession();
+  session=data.session;
+  if(session&&isAdminLoginExpired()){
+    await requireFreshLogin('Sessão expirada. Entre novamente para continuar.');
+    return;
+  }
+  if(session) await start();
 }
 init();
+</script>
+</body>
+</html>
 
 
 
@@ -1828,9 +1784,3 @@ init();
 
 
 
-
-
-
-
-
-Fechar
